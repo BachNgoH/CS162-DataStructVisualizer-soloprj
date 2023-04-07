@@ -8,6 +8,10 @@ enum InitializeOptions {
 	USER_DEFINED = 2,
 };
 
+BasePage::BasePage() {
+	font.loadFromFile("resources/fonts/PressStart2P-Regular.ttf");
+}
+
 void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
 	int& option, int& intializeOpt, Text& errorMessage) {
 		vector<string> options = { "Empty", "Random", "User Input", "Size" };
@@ -353,7 +357,10 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 						if (!valueTextbox.isEmpty()) {
 							int value = stoi(valueTextbox.getText());
 							// Start Search
-							startSearching();
+							startSearching(value);
+							clock.restart();
+							stopDeleting();
+							searchWindow.close();
 						}
 						else {
 							errorMessage.setString("Value and Index are Required!");
@@ -436,8 +443,12 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 							deleteWindow.close();
 							option = 0;
 
-							// Start Delte
-							startDeleting();
+							// Start Delete
+							startDeleting(index);
+							clock.restart();
+							stopSearching();
+							deleteWindow.close();
+
 						}
 						else {
 							errorMessage.setString("Value and Index are Required!");
@@ -466,3 +477,96 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 		}
 	}
 }
+
+void BasePage::startSearching(int value) {}
+void BasePage::stopSearching() {}
+void BasePage::startDeleting(int index) {}
+void BasePage::stopDeleting() {}
+
+void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMode) {
+	Texture bgTexture;
+	bgTexture.loadFromFile(bgPath);
+	Sprite bg(bgTexture);
+
+	Text back;
+	back.setFont(font);
+	back.setString("<");
+	back.setCharacterSize(20);
+	back.setFillColor(Color::White);
+	back.setPosition(19.f, 13.f);
+
+	Font controlFont;
+	controlFont.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
+	vector<string> controlOptions = { "Initialize", "Add", "Delete", "Update", "Search" };
+	vector<Text> controls;
+	vector<RectangleShape> controlRects;
+
+	controls.resize(5);
+	controlRects.resize(5);
+	
+	for (size_t i = 0; i < controls.size(); i++) {
+
+		controls[i].setFont(controlFont);
+		controls[i].setString(controlOptions[i]);
+		controls[i].setPosition(50, 742 + i * 36);
+		controls[i].setCharacterSize(20);
+		controls[i].setFillColor(Color::White);
+
+		controlRects[i].setFillColor(Color(255, 153, 0));
+		controlRects[i].setSize(Vector2f(334.f, 39.f));
+		controlRects[i].setPosition(23, 728 + i * 39);
+
+		if (!isVisualizing && i != 0) {
+			controlRects[i].setFillColor(Color(217, 217, 217));
+		}
+	}
+
+	Vector2i mousePos;
+
+	if (event.type == Event::MouseMoved)
+		mousePos = Mouse::getPosition(window);
+	if (utils::isHover(back, mousePos)) {
+		Cursor cursor;
+		if (cursor.loadFromSystem(sf::Cursor::Hand))
+			window.setMouseCursor(cursor);
+		back.setFillColor(Color(255, 153, 0));
+
+	}
+	else {
+		Cursor cursor;
+		if (cursor.loadFromSystem(sf::Cursor::Arrow))
+			window.setMouseCursor(cursor);
+	}
+
+	if (event.type == Event::MouseButtonPressed) {
+		mousePos = Mouse::getPosition(window);
+		if (utils::isHover(back, mousePos))
+			displayMode = 0;
+
+		for (size_t i = 0; i < controls.size(); i++) {
+			if (utils::isHover(controlRects[i], mousePos)) {
+				if (i == 0)
+					option = 1;
+				else if (isVisualizing)
+					option = i + 1;
+			}
+		}
+
+		//cout << option << endl;
+	}
+	window.draw(bg);
+
+	for (size_t i = 0; i < controls.size(); i++) {
+		if (utils::isHover(controlRects[i], mousePos) && (isVisualizing || i == 0)) {
+			controlRects[i].setFillColor(Color::Black);
+		}
+
+		window.draw(controlRects[i]);
+		window.draw(controls[i]);
+	}
+
+	displayControlOptions(option, window, event);
+	window.draw(back);
+}
+
+BasePage::~BasePage() {}

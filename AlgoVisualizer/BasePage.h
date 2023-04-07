@@ -6,24 +6,28 @@ using namespace sf;
 using namespace std;
 
 class BasePage {
+public:
+
 	string bgPath;
 	vector<int> arr;
 	int option = 0;
 	int arrSize = -1;
 	bool isVisualizing = false;
 	float visualizingSpeed = 1.0;
+	Font font;
+	Clock clock;
 
-	public:
-		BasePage();
-		~BasePage();
-		void display(RenderWindow& window, Event& event, int& displayMode);
-		void displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
-			int& option, int& initializeOpt, Text& errorMessage);
-		void displayControlOptions(int& option, RenderWindow& window, Event& event);
+	BasePage();
+	~BasePage();
+	void display(RenderWindow& window, Event& event, int& displayMode);
+	void displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
+		int& option, int& initializeOpt, Text& errorMessage);
+	void displayControlOptions(int& option, RenderWindow& window, Event& event);
+	void drawPageLayout(RenderWindow& window, Event& event, int& displayMode);
 
-		virtual void startSearching();
-		virtual void stopSearching();
+	virtual void startSearching(int value);
+	virtual void stopSearching();
 
-		virtual void startDeleting();
-		virtual void stopDeleting();
+	virtual void startDeleting(int index);
+	virtual void stopDeleting();
 };

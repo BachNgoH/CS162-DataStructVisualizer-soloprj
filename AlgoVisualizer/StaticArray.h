@@ -2,20 +2,14 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "TextBox.h"
+#include "BasePage.h"
 using namespace sf;
 using namespace std;
 
-class StaticArray
+class StaticArray: public BasePage
 {
-	string bgPath;
-	vector<int> arr;
-	int option = 0;
-	int arrSize = -1;
-	bool isVisualizing = false;
-	float visualizingSpeed = 1.0;
-	
+
 	// search function
-	Clock clock;
 	int searchStep = 0;
 	bool searching = false;
 	int search_value;
@@ -26,15 +20,19 @@ class StaticArray
 	int deleteIndex;
 
 	void visualize(RenderWindow& window, Event& event);
+	
+	void startSearching(int value);
+	void stopSearching();
+	void startDeleting(int index);
+	void stopDeleting();
 
 	public:
 		StaticArray();
 		~StaticArray();
-		void display(RenderWindow& window, Event &event, int &displayMode);
-		void displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect, 
-			int &option, int &initializeOpt, Text &errorMessage);
-		void displayControlOptions(int& option, RenderWindow& window, Event& event);
+		void display(RenderWindow& window, Event& event, int& displayMode);
 		void search();
 		void deleteAtIndex();
+
+
 };
 

@@ -134,17 +134,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasePage.cpp" />
+    <ClCompile Include="CircularLL.cpp" />
+    <ClCompile Include="DoublyLL.cpp" />
+    <ClCompile Include="DynamicArray.cpp" />
     <ClCompile Include="HomeScreen.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Queue.cpp" />
     <ClCompile Include="SinglyLL.cpp" />
+    <ClCompile Include="Stack.cpp" />
     <ClCompile Include="StaticArray.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasePage.h" />
+    <ClInclude Include="CircularLL.h" />
     <ClInclude Include="CodeCell.h" />
+    <ClInclude Include="DoublyLL.h" />
+    <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="HomeScreen.h" />
+    <ClInclude Include="Queue.h" />
     <ClInclude Include="SinglyLL.h" />
+    <ClInclude Include="Stack.h" />
     <ClInclude Include="StaticArray.h" />
     <ClInclude Include="TextBox.h" />
     <ClInclude Include="utils.h" />
