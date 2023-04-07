@@ -12,6 +12,7 @@ int main() {
 	RenderWindow window(VideoMode(1440, 1024), "DSVisual", Style::Close | Style::Titlebar);
 	HomeScreen home(window);
 	StaticArray staticArr;
+	//window.setFramerateLimit(60);
 
 	while (window.isOpen()) {
 		Event event;

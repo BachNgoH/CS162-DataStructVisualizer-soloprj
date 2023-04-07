@@ -10,12 +10,20 @@ HomeScreen::HomeScreen(RenderWindow &window) {
 		"resources/cards/static-array-card.png",
 		"resources/cards/dynamic-array-card.png",
 		"resources/cards/singly-linked-list-card.png",
-		"resources/cards/static-array-card.png",
+		"resources/cards/doubly-linked-list-card.png",
+		"resources/cards/circular-linked-list.png",
+		"resources/cards/queue-card.png",
+		"resources/cards/stack-card.png",
+
 	};
 
 	this->cardPositions = { {59.f, 360.f}, {516.f, 360.f} , {973.f, 360.f} };
-	cardPositions.push_back({ cardPositions[2].x + 408+49, cardPositions[2].y });
-	this->cardsNum = 4;
+	
+	for (size_t i = 3; i < cardPaths.size(); i++) {
+		cardPositions.push_back({ cardPositions[2].x + 457* (i - 2) , cardPositions[2].y});
+	}
+
+	this->cardsNum = 7;
 	this->viewOption = 0;
 
 }
@@ -51,7 +59,30 @@ vector<Sprite> HomeScreen::drawCards(RenderWindow& window, Event &event, int vie
 		if (!cardTextures[i].loadFromFile(this->cardPaths[i])) {
 			cout << "Cannot load file " << this->cardPaths[i] << endl;
 		}
-		cards[i].setPosition(this->cardPositions[i].x - viewOption * 462, this->cardPositions[i].y);
+		
+		if (!clickMoveRight && !clickMoveLeft)
+			cards[i].setPosition(this->cardPositions[i].x - viewOption * 462, this->cardPositions[i].y);
+		else if(clickMoveRight && !clickMoveLeft)
+			cards[i].setPosition(this->cardPositions[i].x - max(0, viewOption - 1) * 462, this->cardPositions[i].y);
+		else if(clickMoveLeft && !clickMoveRight)
+			cards[i].setPosition(this->cardPositions[i].x - min(cardsNum - 3, viewOption + 1) * 462, this->cardPositions[i].y);
+
+		if (clickMoveRight && clock.getElapsedTime().asSeconds() < cardMoveTime) {
+				cards[i].move((- 462.f / cardMoveTime)* clock.getElapsedTime().asSeconds(), 0);
+		}
+		else if (clickMoveRight && !clickMoveLeft) {
+			clickMoveRight = false;
+			cards[i].setPosition(this->cardPositions[i].x - viewOption * 462, this->cardPositions[i].y);
+		}
+
+		if (clickMoveLeft && clock.getElapsedTime().asSeconds() < cardMoveTime) {
+			cards[i].move((462.f / cardMoveTime) * clock.getElapsedTime().asSeconds(), 0);
+		}
+		else if(clickMoveLeft && !clickMoveRight) {
+			clickMoveLeft = false;
+			cards[i].setPosition(this->cardPositions[i].x - viewOption * 462, this->cardPositions[i].y);
+		}
+
 		cards[i].setTexture(cardTextures[i]);
 
 	}
@@ -156,11 +187,18 @@ void HomeScreen::display(RenderWindow& window, Event &event, int &displayMode) {
 				// Right Button Pressed
 				if (i == 1) {
 					clock.restart();
-					viewOption = min(viewOption + 1, 1);
+					if (viewOption < cardsNum - 3) {
+						viewOption++;
+						clickMoveRight = true;
+					}
 				}// Left Button Pressed
-				if (i == 0)
-					viewOption = max(0, viewOption - 1);
-
+				if (i == 0) {
+					clock.restart();
+					if (viewOption > 0) {
+						viewOption--;
+						clickMoveLeft = true;
+					}
+				}
 			}
 		}
 

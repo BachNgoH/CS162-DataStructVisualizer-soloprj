@@ -1,24 +1,6 @@
-﻿  HomeScreen.cpp
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(39,48): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(39,41): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(69,14): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(70,15): warning C4244: 'initializing': conversion from 'T' to 'int', possible loss of data
-          with
-          [
-              T=float
-          ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(71,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\HomeScreen.cpp(72,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  SinglyLL.cpp
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(37,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(80,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(106,30): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(109,35): warning C4018: '>': signed/unsigned mismatch
   AlgoVisualizer.vcxproj -> C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\Debug\AlgoVisualizer.exe

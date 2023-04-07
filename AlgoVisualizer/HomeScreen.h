@@ -14,6 +14,9 @@ class HomeScreen {
 	int cardsNum;
 	int viewOption;
 	Clock clock;
+	bool clickMoveLeft = false;
+	bool clickMoveRight = false;
+	float cardMoveTime = .5f;
 
 	vector<Sprite> drawCards(RenderWindow &window, Event &event, int viewOption);
 	vector<Sprite> getButtons(RenderWindow& window, Event& event, int viewOption);

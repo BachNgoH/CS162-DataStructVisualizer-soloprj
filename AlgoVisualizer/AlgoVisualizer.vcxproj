@@ -133,14 +133,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BasePage.cpp" />
     <ClCompile Include="HomeScreen.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SinglyLL.cpp" />
     <ClCompile Include="StaticArray.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasePage.h" />
+    <ClInclude Include="CodeCell.h" />
     <ClInclude Include="HomeScreen.h" />
+    <ClInclude Include="SinglyLL.h" />
     <ClInclude Include="StaticArray.h" />
+    <ClInclude Include="TextBox.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
