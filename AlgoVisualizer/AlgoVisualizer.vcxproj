@@ -146,6 +146,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Arrow.h" />
     <ClInclude Include="BasePage.h" />
     <ClInclude Include="CircularLL.h" />
     <ClInclude Include="CodeCell.h" />

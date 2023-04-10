@@ -16,6 +16,7 @@ public:
 	float visualizingSpeed = 1.0;
 	Font font;
 	Clock clock;
+	bool includeSize = true;
 
 	BasePage();
 	~BasePage();
@@ -30,4 +31,8 @@ public:
 
 	virtual void startDeleting(int index);
 	virtual void stopDeleting();
+	virtual void initVisualizing(int& option, int initializeOptions);
+	virtual void drawInsert(int& option);
+	virtual void drawUpdate(int& option);
+
 };

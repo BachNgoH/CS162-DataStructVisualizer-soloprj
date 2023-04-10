@@ -12,18 +12,155 @@ BasePage::BasePage() {
 	font.loadFromFile("resources/fonts/PressStart2P-Regular.ttf");
 }
 
+void BasePage::initVisualizing(int &option, int initializeOptions) {
+	option = 0;
+}
+
+void BasePage::drawInsert(int &option) {
+	string windowTitle;
+	if (option == 2)
+		windowTitle = "Add To Array";
+	else
+		windowTitle = "Update Array";
+
+	RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
+	Font font;
+	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
+
+	TextBox valueTextBox(18, Color::White, false);
+	valueTextBox.setFont(font);
+	valueTextBox.setPosition(Vector2f(376, 106));
+	valueTextBox.setLimit(true, 1);
+	//sizeTextBox.setString(std::to_string(arrSize));
+
+	Texture vboxTexture;
+	vboxTexture.loadFromFile("resources/blocks/ValueBox.png");
+	Sprite valueBox;
+	valueBox.setTexture(vboxTexture);
+	valueBox.setPosition(Vector2f(171, 92));
+
+	TextBox indexTextBox(18, Color::White, false);
+	indexTextBox.setFont(font);
+	indexTextBox.setPosition(Vector2f(376, 215));
+	indexTextBox.setLimit(true, 1);
+
+	Texture iboxTexture;
+	iboxTexture.loadFromFile("resources/blocks/IndexBox.png");
+	Sprite indexBox;
+	indexBox.setTexture(iboxTexture);
+	indexBox.setPosition(Vector2f(171, 200));
+
+	Texture doneTexture;
+	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
+
+	Sprite doneButton;
+	doneButton.setTexture(doneTexture);
+	doneButton.setPosition(Vector2f(503, 346));
+
+	Text errorMessage;
+	errorMessage.setFont(font);
+	errorMessage.setFillColor(Color::Red);
+	errorMessage.setCharacterSize(15);
+	errorMessage.setPosition(Vector2f(171, 276));
+
+	while (addWindow.isOpen()) {
+		Event aevent;
+		Vector2i mousePos = Mouse::getPosition(addWindow);
+
+		while (addWindow.pollEvent(aevent)) {
+			switch (aevent.type) {
+			case Event::Closed:
+				addWindow.close();
+				option = 0;
+				break;
+			case Event::TextEntered:
+				valueTextBox.typedOn(aevent);
+				indexTextBox.typedOn(aevent);
+				break;
+			case Event::MouseButtonPressed:
+				if (utils::isHover(valueBox, mousePos)) {
+					valueTextBox.setSelected(true);
+					indexTextBox.setSelected(false);
+				}
+				else if (utils::isHover(indexBox, mousePos)) {
+					valueTextBox.setSelected(false);
+					indexTextBox.setSelected(true);
+				}
+				else {
+					valueTextBox.setSelected(false);
+					indexTextBox.setSelected(false);
+				}
+
+				if (utils::isHover(doneButton, mousePos)) {
+
+					if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty()) {
+						int index = stoi(indexTextBox.getText());
+						int value = stoi(valueTextBox.getText());
+
+						if (index >= arrSize || index < 0) {
+							//cout << errorMessage.getString().toAnsiString() << endl;
+							errorMessage.setString("Invalid index");
+						}
+						else {
+
+							arr[index] = value;
+							addWindow.close();
+							option = 0;
+						}
+					}
+					else {
+						errorMessage.setString("Value and Index are Required!");
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+		addWindow.clear(Color(232, 232, 232));
+
+		if (utils::isHover(doneButton, mousePos)) {
+			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
+			doneButton.setTexture(doneTexture);
+		}
+		else {
+			doneTexture.loadFromFile("resources/buttons/DoneButton.png");
+			doneButton.setTexture(doneTexture);
+		}
+
+		addWindow.draw(doneButton);
+		addWindow.draw(valueBox);
+		addWindow.draw(indexBox);
+		valueTextBox.drawTo(addWindow);
+		indexTextBox.drawTo(addWindow);
+		addWindow.draw(errorMessage);
+
+		addWindow.display();
+	}
+}
+
+void BasePage::drawUpdate(int &option) {
+	drawInsert(option);
+}
+
 void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
 	int& option, int& intializeOpt, Text& errorMessage) {
-		vector<string> options = { "Empty", "Random", "User Input", "Size" };
-	vector<Vector2f> positions = { {182, 67}, {182, 128}, {182, 189}, {182, 291} };
-	vector<Vector2f> textPositions = { {270, 75}, {264, 136}, {240, 197}, {222, 299} };
+	
+	vector<string> options = { "Empty", "Random", "User Input"};
+	vector<Vector2f> positions = { {182, 67}, {182, 128}, {182, 189} };
+	vector<Vector2f> textPositions = { {270, 75}, {264, 136}, {240, 197} };
+	if (includeSize) {
+		options.push_back("Size");
+		positions.push_back({ 182, 291 });
+		textPositions.push_back({ 222, 299 });
+	}
 
 	Font font;
 	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
 
-
-
 	Vector2i mousePos = Mouse::getPosition(window);
+	
 
 	for (size_t i = 0; i < options.size(); i++) {
 		RectangleShape box;
@@ -43,11 +180,11 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 			text.setFillColor(Color::White);
 		}
 
-		if (intializeOpt == i || i == options.size() - 1)
+		if (intializeOpt == i || (i == options.size() - 1 && includeSize))
 			box.setFillColor(Color(255, 153, 0));
 
 		if (event.type == Event::MouseButtonPressed) {
-			if (utils::isHover(box, mousePos) && i != options.size() - 1) {
+			if (utils::isHover(box, mousePos) && (i != options.size() - 1 || !includeSize)) {
 				intializeOpt = i;
 			}
 		}
@@ -72,7 +209,11 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 
 
 		if (utils::isHover(doneButton, mousePos)) {
-			if (sizeTextBox.isEmpty()) {
+			if (!includeSize) {
+				initVisualizing(option, intializeOpt);
+				window.close();
+			}
+			else if (sizeTextBox.isEmpty()) {
 				errorMessage.setString("array size is required!");
 			}
 			else if (stoi(sizeTextBox.getText()) > 10) {
@@ -106,8 +247,8 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 	}
 
 
-
-	window.draw(sizeRect);
+	if(includeSize)
+		window.draw(sizeRect);
 	sizeTextBox.drawTo(window);
 	window.draw(doneButton);
 	window.draw(errorMessage);
@@ -156,16 +297,19 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 					option = 0;
 					break;
 				case (Event::MouseButtonPressed):
-					if (utils::isHover(sizeRect, mousePos)) {
-						//cout << "HERE 1" << endl;
-						sizeTextBox.setSelected(true);
-					}
-					else {
-						sizeTextBox.setSelected(false);
+					if (includeSize) {
+						if (utils::isHover(sizeRect, mousePos)) {
+							//cout << "HERE 1" << endl;
+							sizeTextBox.setSelected(true);
+						}
+						else {
+							sizeTextBox.setSelected(false);
+						}
 					}
 					break;
 				case (Event::TextEntered):
-					sizeTextBox.typedOn(aevent);
+					if (includeSize)
+						sizeTextBox.typedOn(aevent);
 					break;
 				default:
 					continue;
@@ -178,128 +322,11 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 		}
 	}
 	// add & update
-	else if (option == 2 || option == 4) {
-		string windowTitle;
-		if (option == 2)
-			windowTitle = "Add To Array";
-		else
-			windowTitle = "Update Array";
-
-		RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
-		Font font;
-		font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
-
-		TextBox valueTextBox(18, Color::White, false);
-		valueTextBox.setFont(font);
-		valueTextBox.setPosition(Vector2f(376, 106));
-		valueTextBox.setLimit(true, 1);
-		//sizeTextBox.setString(std::to_string(arrSize));
-
-		Texture vboxTexture;
-		vboxTexture.loadFromFile("resources/blocks/ValueBox.png");
-		Sprite valueBox;
-		valueBox.setTexture(vboxTexture);
-		valueBox.setPosition(Vector2f(171, 92));
-
-		TextBox indexTextBox(18, Color::White, false);
-		indexTextBox.setFont(font);
-		indexTextBox.setPosition(Vector2f(376, 215));
-		indexTextBox.setLimit(true, 1);
-
-		Texture iboxTexture;
-		iboxTexture.loadFromFile("resources/blocks/IndexBox.png");
-		Sprite indexBox;
-		indexBox.setTexture(iboxTexture);
-		indexBox.setPosition(Vector2f(171, 200));
-
-		Texture doneTexture;
-		doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-
-		Sprite doneButton;
-		doneButton.setTexture(doneTexture);
-		doneButton.setPosition(Vector2f(503, 346));
-
-		Text errorMessage;
-		errorMessage.setFont(font);
-		errorMessage.setFillColor(Color::Red);
-		errorMessage.setCharacterSize(15);
-		errorMessage.setPosition(Vector2f(171, 276));
-
-		while (addWindow.isOpen()) {
-			Event aevent;
-			Vector2i mousePos = Mouse::getPosition(addWindow);
-
-			while (addWindow.pollEvent(aevent)) {
-				switch (aevent.type) {
-				case Event::Closed:
-					addWindow.close();
-					option = 0;
-					break;
-				case Event::TextEntered:
-					valueTextBox.typedOn(aevent);
-					indexTextBox.typedOn(aevent);
-					break;
-				case Event::MouseButtonPressed:
-					if (utils::isHover(valueBox, mousePos)) {
-						valueTextBox.setSelected(true);
-						indexTextBox.setSelected(false);
-					}
-					else if (utils::isHover(indexBox, mousePos)) {
-						valueTextBox.setSelected(false);
-						indexTextBox.setSelected(true);
-					}
-					else {
-						valueTextBox.setSelected(false);
-						indexTextBox.setSelected(false);
-					}
-
-					if (utils::isHover(doneButton, mousePos)) {
-
-						if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty()) {
-							int index = stoi(indexTextBox.getText());
-							int value = stoi(valueTextBox.getText());
-
-							if (index >= arrSize || index < 0) {
-								//cout << errorMessage.getString().toAnsiString() << endl;
-								errorMessage.setString("Invalid index");
-							}
-							else {
-
-								arr[index] = value;
-								addWindow.close();
-								option = 0;
-							}
-						}
-						else {
-							errorMessage.setString("Value and Index are Required!");
-						}
-					}
-					break;
-				default:
-					break;
-				}
-			}
-
-			addWindow.clear(Color(232, 232, 232));
-
-			if (utils::isHover(doneButton, mousePos)) {
-				doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
-				doneButton.setTexture(doneTexture);
-			}
-			else {
-				doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-				doneButton.setTexture(doneTexture);
-			}
-
-			addWindow.draw(doneButton);
-			addWindow.draw(valueBox);
-			addWindow.draw(indexBox);
-			valueTextBox.drawTo(addWindow);
-			indexTextBox.drawTo(addWindow);
-			addWindow.draw(errorMessage);
-
-			addWindow.display();
-		}
+	else if (option == 2) {
+		drawInsert(option);
+	}
+	else if (option == 4) {
+		drawUpdate(option);
 	}
 	// 
 	else if (option == 5) {

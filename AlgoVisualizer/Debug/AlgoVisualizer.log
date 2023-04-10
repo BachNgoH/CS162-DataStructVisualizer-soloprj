@@ -1,6 +1,29 @@
-﻿  main.cpp
+﻿  SinglyLL.cpp
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(80,22): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(106,30): warning C4018: '<=': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(109,35): warning C4018: '>': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(30,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(54,39): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(57,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(197,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(282,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(287,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(354,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(375,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(380,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(402,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(408,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   AlgoVisualizer.vcxproj -> C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\Debug\AlgoVisualizer.exe

@@ -7,7 +7,6 @@ class Stack : public BasePage
 {
 
 	void visualize(RenderWindow& window, Event& event);
-
 	void startSearching(int value);
 	void stopSearching();
 	void startDeleting(int index);
