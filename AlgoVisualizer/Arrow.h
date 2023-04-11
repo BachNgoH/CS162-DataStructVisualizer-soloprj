@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#define PI 3.14159265358979323846  
 
 class Arrow {
 public:
@@ -6,10 +7,16 @@ public:
     Vector2f endPosition;
     float thickness;
     Color color;
+    float animatingTime = 200.f;
+    bool isReverse = false;
 
     Arrow();
     Arrow(Vector2f startPosition, Vector2f endPosition, float thickness, Color color);
     void drawTo(sf::RenderWindow& window, int timeStep, bool animating);
+    void drawToV2(sf::RenderWindow& window, int timeStep, bool animating);
+    void setStartPosition(Vector2f startPosition);
+    void setEndPosition(Vector2f endPosition);
+    void setAnimatingTime(float animatingTime);
 
 private:
     sf::VertexArray m_vertices;
@@ -23,6 +30,7 @@ Arrow::Arrow(sf::Vector2f startPosition, Vector2f endPosition, float thickness, 
     this->thickness = thickness;
     this->color = color;
 }
+
 
 void Arrow::drawTo(sf::RenderWindow& window, int timeStep, bool animating) {
 
@@ -68,4 +76,73 @@ void Arrow::drawTo(sf::RenderWindow& window, int timeStep, bool animating) {
         window.draw(triangle);
     }
     
+}
+
+void Arrow::drawToV2(RenderWindow& window, int timeStep, bool animating) {
+    // Calculate the length of the line
+    float length = std::sqrt(std::pow(startPosition.x - endPosition.x, 2) + std::pow(endPosition.y - startPosition.y, 2));
+
+    // Calculate the direction of the line
+    float direction = std::atan2(endPosition.y - startPosition.y, endPosition.x - startPosition.x);
+
+    // Create the arrow shape m
+    sf::ConvexShape arrow(3);
+    arrow.setFillColor(color);
+    arrow.setOutlineColor(color);
+
+
+    arrow.setPoint(0, sf::Vector2f(0, thickness * 1.5));
+    arrow.setPoint(1, sf::Vector2f(0, -thickness * 1.5));
+    arrow.setPoint(2, sf::Vector2f(thickness * sqrt(3) * 1.5, 0));
+
+    // Rotate the arrow to point in the direction of the line
+    arrow.setRotation(direction * 180 / PI);
+
+    // Position the arrow at the end of the line
+
+    
+    // Draw the line 
+    Vector2f lineDirection = endPosition - startPosition;
+    Vector2f unitDirection = lineDirection / std::sqrt(lineDirection.x * lineDirection.x + lineDirection.y * lineDirection.y);
+    Vector2f unitPerpendicular(-unitDirection.y, unitDirection.x);
+    Vector2f offset = (thickness / 2.f) * unitPerpendicular;
+
+    Vector2f arrowOffset = unitDirection * static_cast<float>(thickness * sqrt(3) * 1.5);
+
+    Vector2f timeOffset;
+    if (animating && timeStep < animatingTime) {
+        if (!isReverse)
+            timeOffset = unitDirection * length * (1 - timeStep / animatingTime);
+        else
+            timeOffset = unitDirection * length * (timeStep / animatingTime);
+    }
+    endPosition = endPosition - timeOffset;
+
+    arrow.setPosition(endPosition - arrowOffset);
+
+
+    sf::Vertex line[4];
+
+    line[0].position = startPosition + offset;
+    line[1].position = (endPosition - arrowOffset) + offset;
+    line[2].position = (endPosition - arrowOffset) - offset;
+    line[3].position = startPosition - offset;
+
+    for (int i = 0; i < 4; ++i)
+        line[i].color = color;
+
+    window.draw(line, 4, sf::Quads);
+    window.draw(arrow);
+}
+
+void Arrow::setStartPosition(Vector2f startPosition) {
+    this->startPosition = startPosition;
+}
+
+void Arrow::setEndPosition(Vector2f endPosition) {
+    this->endPosition = endPosition;    
+}
+
+void Arrow::setAnimatingTime(float animatingTime) {
+    this->animatingTime = animatingTime;
 }

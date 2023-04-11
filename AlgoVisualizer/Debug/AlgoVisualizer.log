@@ -3,27 +3,87 @@ C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(37,
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(80,22): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(106,30): warning C4018: '<=': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(109,35): warning C4018: '>': signed/unsigned mismatch
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(30,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(54,39): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(57,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(197,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(282,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(25,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(35,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(81,87): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(287,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(354,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(375,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(82,88): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(380,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(402,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(83,71): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
           with
           [
               T=float
           ]
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(408,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(86,86): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(87,87): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(88,72): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(108,31): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(119,33): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(38,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(62,39): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(65,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(83,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(94,49): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(95,50): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(96,56): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Arrow.h(99,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(163,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(177,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(221,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(233,26): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(258,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(504,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(509,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(681,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(686,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(707,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(712,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(734,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\SinglyLL.cpp(740,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   AlgoVisualizer.vcxproj -> C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\Debug\AlgoVisualizer.exe

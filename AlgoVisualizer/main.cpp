@@ -17,7 +17,8 @@ int main() {
 	int displayMode = 0;
 	RenderWindow window(VideoMode(1440, 1024), "DSVisual", Style::Close | Style::Titlebar);
 	HomeScreen home(window);
-	
+	srand(time(0));
+
 	// Data Structures
 	StaticArray staticArr;
 	DynamicArray dynamicArr;
@@ -34,6 +35,9 @@ int main() {
 		while (window.pollEvent(event)) {
 			if (event.type == Event::Closed)
 				window.close();
+			if (event.type == Event::MouseButtonReleased) {
+
+			}
 		}
 
 		window.clear();

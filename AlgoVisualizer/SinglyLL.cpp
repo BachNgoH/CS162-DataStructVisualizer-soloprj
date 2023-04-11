@@ -12,6 +12,8 @@ SinglyLL::SinglyLL() {
 	bgPath = "resources/SinglyLinkedList-Background.png";
 	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
 	includeSize = false;
+	codeBlock.setFont(font);
+
 }
 
 void SinglyLL::initVisualizing(int& option, int initializeOptions) 
@@ -19,6 +21,7 @@ void SinglyLL::initVisualizing(int& option, int initializeOptions)
 	option = 0;
 	isVisualizing = true;
 	clock.restart();
+	stopSearching();
 	switch (initializeOptions) {
 	// empty
 	case 0:
@@ -67,25 +70,25 @@ void SinglyLL::drawInsert(int &option) {
 	}
 
 	// Value Box
-	TextBox valueTextBox(18, Color::White, false);
+	TextBox valueTextBox(18, Color::Black, false);
 	valueTextBox.setFont(font);
 	valueTextBox.setPosition(Vector2f(376, 281));
 	valueTextBox.setLimit(true, 1);
 	
 	RectangleShape valueRect;
 	valueRect.setSize(Vector2f(45, 27));
-	valueRect.setFillColor(Color(180, 180, 180));
+	valueRect.setFillColor(Color(217, 217, 217));
 	valueRect.setPosition(365, 280);
 
 	// Index Box
-	TextBox indexTextBox(18, Color::White, false);
+	TextBox indexTextBox(18, Color::Black, false);
 	indexTextBox.setFont(font);
 	indexTextBox.setPosition(Vector2f(376, 210));
 	indexTextBox.setLimit(true, 1);
 
 	RectangleShape indexRect;
 	indexRect.setSize(Vector2f(45, 27));
-	indexRect.setFillColor(Color(180, 180, 180));
+	indexRect.setFillColor(Color(217, 217, 217));
 	indexRect.setPosition(365, 209);
 
 	// Done Button
@@ -134,8 +137,10 @@ void SinglyLL::drawInsert(int &option) {
 				}
 
 				if (utils::isHover(doneButton, mousePos)) {
-
-					if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty() && addOption == InsertOption::INDEX) {
+					if (arrSize == 8) {
+						errorMessage.setString("The Max Array Size is 8");
+					}
+					else if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty() && addOption == InsertOption::INDEX) {
 						int index = stoi(indexTextBox.getText());
 						int value = stoi(valueTextBox.getText());
 
@@ -144,23 +149,58 @@ void SinglyLL::drawInsert(int &option) {
 							errorMessage.setString("Invalid index");
 						}
 						else {
+							
 							insertValue = value;
 							insertIndex = index;
 							if (index == arrSize - 1) {
 								mode = InsertOption::TAIL;
 								totalInsertStep = 1;
+								codeBlock.setIsOpen(true);
+								codeBlock.codelines[0] = "Vertex vtx = new Vertex(v)";
+								codeBlock.codelines[1] = "tail.next = vtx";
+								codeBlock.codelines[2] = "tail = vtx";
+
+								for (int i = 3; i < codeBlock.codelines.size(); i++) {
+									codeBlock.codelines[i] = "";
+								}
+								codeBlock.setSelectedLine(0);
 							}
 							else if (index == 0) {
 								mode = InsertOption::HEAD;
 								totalInsertStep = 2;
+
+								codeBlock.setIsOpen(true);
+								codeBlock.codelines[0] = "Vertex vtx = new Vertex(v)";
+								codeBlock.codelines[1] = "vtx.next = head";
+								codeBlock.codelines[2] = "head = vtx";
+
+								for (int i = 3; i < codeBlock.codelines.size(); i++) {
+									codeBlock.codelines[i] = "";
+								}
 							}
 							else {
 								mode = InsertOption::INDEX;
 								totalInsertStep = index + 4;
+								
+								codeBlock.setIsOpen(true);
+								codeBlock.codelines[0] = "Vertex pre = head";
+								codeBlock.codelines[1] = "for (k = 0; k < i-1; k++)";
+								codeBlock.codelines[2] = "  pre = pre.next";
+								codeBlock.codelines[3] = "Vertex aft = pre.next";
+								codeBlock.codelines[4] = "Vertex vtx = new Vertext(v)";
+								codeBlock.codelines[5] = "vtx.next = aft";
+								codeBlock.codelines[6] = "pre.next = vtx";
+
+								codeBlock.setSelectedLine(0);
+
 							}
 							inserting = true;
 							insertStep = 0;
 							clock.restart();
+							
+							stopSearching();
+							stopDeleting();
+
 							addWindow.close();
 							option = 0;
 						}
@@ -172,13 +212,34 @@ void SinglyLL::drawInsert(int &option) {
 						if (mode == InsertOption::HEAD) {
 							totalInsertStep = 2;
 							insertIndex = 0;
+
+							codeBlock.setIsOpen(true);
+							codeBlock.codelines[0] = "Vertext vtx = new Vertex(v)";
+							codeBlock.codelines[1] = "vtx.next = head";
+							codeBlock.codelines[2] = "head = vtx";
+
+							for (int i = 3; i < codeBlock.codelines.size(); i++) {
+								codeBlock.codelines[i] = "";
+							}
 						}
 						else {
 							totalInsertStep = 1;
 							insertIndex = -1;
+							codeBlock.setIsOpen(true);
+							codeBlock.codelines[0] = "Vertex vtx = new Vertex(v)";
+							codeBlock.codelines[1] = "tail.next = vtx";
+							codeBlock.codelines[2] = "tail = vtx";
+
+							for (int i = 3; i < codeBlock.codelines.size(); i++) {
+								codeBlock.codelines[i] = "";
+							}
+							codeBlock.setSelectedLine(0);
 						}
 						insertStep = 0;
 						clock.restart();
+						stopSearching();
+						stopDeleting();
+
 						addWindow.close();
 						option = 0;
 					}
@@ -237,26 +298,132 @@ void SinglyLL::drawInsert(int &option) {
 	}
 }
 
-void SinglyLL::startSearching(int value) {}
+void SinglyLL::startSearching(int value) {
+	search_value = value;
+	option = 0;
+	searching = true;
+	found = false;
+	searchStep = 0;
 
-void SinglyLL::stopSearching() {}
+	codeBlock.setIsOpen(true);
+	codeBlock.codelines[0] = "if empty, return NOT_FOUND";
+	codeBlock.codelines[1] = "index = 0, temp = head";
+	codeBlock.codelines[2] = "while (temp.item != v)";
+	codeBlock.codelines[3] = "  index++, temp = temp.next";
+	codeBlock.codelines[4] = "  if temp == null";
+	codeBlock.codelines[5] = "    return NOT_FOUND";
+	codeBlock.codelines[6] = "return index";
 
-void SinglyLL::startDeleting(int index) {}
 
-void SinglyLL::stopDeleting() {}
+	if (arrSize == 0) {
+		codeBlock.setSelectedLine(0);
+		stopSearching();
+	}
+	else {
+		codeBlock.setSelectedLine(1);
+	}
+}
+
+void SinglyLL::stopSearching() {
+	searching = false;
+	found = false;
+	searchStep = 0;
+}
+
+void SinglyLL::startDeleting(int index) {
+	deleteIndex = index;
+	option = 0;
+	if (deleteIndex == 0) {
+		codeBlock.setIsOpen(true);
+		codeBlock.codelines[0] = "if empty, do nothing";
+		codeBlock.codelines[1] = "temp = head";
+		codeBlock.codelines[2] = "head = head.next";
+		codeBlock.codelines[3] = "delete temp";
+		for (size_t i = 4; i < codeBlock.codelines.size(); i++) {
+			codeBlock.codelines[i] = "";
+		}
+
+		codeBlock.setSelectedLine(1);
+		mode = InsertOption::HEAD;
+		totalDeleteStep = 2;
+	}
+	else if (deleteIndex == arrSize - 1) {
+
+		codeBlock.setIsOpen(true);
+		codeBlock.codelines[0] = "if empty, do nothing";
+		codeBlock.codelines[1] = "Vertext pre = head, temp = pre.next";
+		codeBlock.codelines[2] = "while (temp && temp.next != null)";
+		codeBlock.codelines[3] = "  pre = pre.next";
+		codeBlock.codelines[4] = "  temp = temp.next";
+		codeBlock.codelines[5] = "pre.next = null";
+		codeBlock.codelines[6] = "delete temp, tail = pre";
+
+		mode = InsertOption::TAIL;
+		codeBlock.setSelectedLine(1);
+		totalDeleteStep = deleteIndex + 2;
+	}
+	else {
+		codeBlock.setIsOpen(true);
+		codeBlock.codelines[0] = "if empty, do nothing";
+		codeBlock.codelines[1] = "Vertext pre = head";
+		codeBlock.codelines[2] = "for (k = 0; k < i-1; k++)";
+		codeBlock.codelines[3] = "  pre = pre.next";
+		codeBlock.codelines[4] = "Vertex del = pre.next, aft = del.next";
+		codeBlock.codelines[5] = "pre.next = aft // bypass del";
+		codeBlock.codelines[6] = "delete del";
+
+		mode = InsertOption::INDEX;
+		codeBlock.setSelectedLine(1);
+		totalDeleteStep = deleteIndex + 2;
+	}
+
+	if (arrSize == 0) {
+		codeBlock.setSelectedLine(0);
+		stopDeleting();
+	}
+	deleting = true;
+	deleteStep = 0;
+}
+
+void SinglyLL::stopDeleting() {
+	deleting = false;
+	deleteIndex = 0;
+	deleteStep = 0;
+	totalDeleteStep = 0;
+
+}
 
 void SinglyLL::startInserting() {
 	if (inserting) {
 		if (clock.getElapsedTime().asMilliseconds() >= insertStepTime) {
 			if (insertStep < totalInsertStep) {
 				// cout << insertStep << endl;
+				switch (mode) {
+				case (InsertOption::INDEX):
+					if (insertStep < insertIndex - 1) {
+						codeBlock.setSelectedLine(1, 2);
+					}
+					else if (insertStep >= insertIndex - 1 && insertStep <= insertIndex) {
+						codeBlock.setSelectedLine(3);
+					}
+					else if (insertStep > insertIndex) {
+						codeBlock.setSelectedLine(insertStep - insertIndex + 3);
+					}
+					break;
+				case(InsertOption::HEAD):
+					codeBlock.setSelectedLine(insertStep);
+					break;
+				case(InsertOption::TAIL):
+					codeBlock.setSelectedLine(insertStep+1);
+					break;
+				}
 				insertStep += 1;
 				clock.restart();
 			}
 			else {
 				inserting = false;
 				insertStep = 0;
-
+				codeBlock.setSelectedLine(-1);
 				arrSize += 1;
 				if (insertIndex == -1)
 					arr.push_back(insertValue);
@@ -264,6 +431,61 @@ void SinglyLL::startInserting() {
 					arr.insert(arr.begin() + insertIndex, insertValue);
 				
 			}
+		}
+	}
+}
+
+void SinglyLL::search() {
+	if (searching) {
+		
+		if (clock.getElapsedTime().asMilliseconds() > searchStepTime) {
+			if (searchStep < arrSize) {
+				if (arr[searchStep] != search_value) {
+					searchStep += 1;
+					codeBlock.setSelectedLine(2, 3);
+				}
+				else {
+					found = true;
+					codeBlock.setSelectedLine(6);
+				}
+				clock.restart();
+			}
+			else {
+				codeBlock.setSelectedLine(5);
+			}
+		}
+	}
+}
+
+void SinglyLL::deleteAtIndex() {
+	if (deleting) {
+		if (clock.getElapsedTime().asMilliseconds() >= deleteStepTime) {
+			// cout << deleteStep << endl;
+			if (deleteStep < totalDeleteStep) {
+				deleteStep += 1;
+
+				if (mode == InsertOption::HEAD) {
+					if (deleteStep == 1)
+						codeBlock.setSelectedLine(2);
+					if (deleteStep == 2)
+						codeBlock.setSelectedLine(3);
+				}
+				else if (mode == InsertOption::TAIL || mode == InsertOption::INDEX) {
+					if (deleteStep < deleteIndex && deleteStep > 0) {
+						codeBlock.setSelectedLine(2, 3);
+					}else if (deleteStep >= deleteIndex && deleteStep <= deleteIndex + 1)
+						codeBlock.setSelectedLine(5);
+					else if (deleteStep >= deleteIndex + 2)
+						codeBlock.setSelectedLine(6);
+				}
+			}
+			else {
+				arrSize--;
+				arr.erase(arr.begin() + deleteIndex);
+				stopDeleting();
+				codeBlock.setSelectedLine(-1);
+			}
+			clock.restart();
 		}
 	}
 }
@@ -300,6 +522,7 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 						allLLBlocks[i].move(160.f, 0);
 						value.move(160.f, 0);
 					}
+					break;
 				case InsertOption::INDEX:
 					if ((insertStep < insertIndex && insertStep == i) || (insertStep >= insertIndex && i == insertIndex - 1)) {
 						textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
@@ -323,6 +546,74 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 				}
 					
 			}
+			
+			// Search Logic
+			if (searching) {
+				if (i <= searchStep) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+				if (arr[i] == search_value && searchStep == i) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+			}
+
+			// Delete Logic
+			if (deleting) {
+				if (mode == InsertOption::INDEX || mode == InsertOption::TAIL) {
+					if (i == deleteStep && deleteStep < deleteIndex) {
+						textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+						allLLBlocks[i].setTexture(textureLL);
+					}
+					if (deleteStep >= deleteIndex) {
+						if (deleteStep >= deleteIndex + 2) {
+							if (i == deleteIndex)
+								continue;
+							else if (i > deleteIndex) {
+								allLLBlocks[i].move(-160 * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f), 0);
+								value.move(-160 * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f), 0);
+							}
+
+						}
+						if (i == deleteIndex) {
+							textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+							allLLBlocks[i].setTexture(textureLL);
+
+							if (mode == InsertOption::INDEX) {
+								if (deleteStep == deleteIndex + 1) {
+									allLLBlocks[i].move(0, 100.f * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f));
+									value.move(0, 100.f * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f));
+								}
+								else if (deleteStep > deleteIndex + 1) {
+									allLLBlocks[i].move(0, 100.f);
+									value.move(0, 100.f);
+								}
+							}
+						}
+						if (i == deleteIndex - 1 || i == deleteIndex + 1) {
+							textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+							allLLBlocks[i].setTexture(textureLL);
+						}
+					}
+				} 
+				else if(mode == InsertOption::HEAD){
+					if (i == deleteStep && deleteStep <= 1) {
+						textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+						allLLBlocks[i].setTexture(textureLL);
+					}
+					else if (deleteStep == 1 && i == 0) {
+						textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+						allLLBlocks[i].setTexture(textureLL);
+					}
+					else if (deleteStep == 2 && i > 0) {
+						allLLBlocks[i].move(-160.f * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f), 0);
+						value.move(-160.f * min(clock.getElapsedTime().asMilliseconds() / deleteStepTime, 1.f), 0);
+					}
+					else if (deleteStep == 2 && i == 0)
+						continue;
+				}
+			}
 
 			window.draw(allLLBlocks[i]);
 			window.draw(value);
@@ -333,9 +624,50 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 				continue;
 			Vector2f startPosition = utils::get4sizesCoords(allLLBlocks[i])[1];
 			Vector2f endPosition = utils::get4sizesCoords(allLLBlocks[i + 1])[0];
+			
 			Arrow arrow(startPosition, endPosition, 5, Color::Black);
 			int timeStep = clock.getElapsedTime().asMilliseconds();
-			arrow.drawTo(window, timeStep, !inserting);
+
+			if (deleting) {
+				arrow.setAnimatingTime(deleteStepTime);
+
+				if (mode == InsertOption::INDEX || mode == InsertOption::TAIL) {
+					if (deleteStep >= deleteIndex + 1) {
+						if (deleteStep == deleteIndex + 2 && i == deleteIndex)
+							continue;
+
+						if (i == deleteIndex - 1 && i + 2 < arrSize) {
+							arrow.setEndPosition(utils::get4sizesCoords(allLLBlocks[i + 2])[0]);
+							arrow.drawToV2(window, timeStep, deleteStep == deleteIndex + 1);
+							continue;
+						}
+
+						if (mode == InsertOption::TAIL && deleteStep >= deleteIndex + 1 && i == deleteIndex - 1) {
+							if (deleteStep == deleteIndex + 2)
+								continue;
+							arrow.isReverse = true;
+							arrow.drawToV2(window, timeStep, true);
+							continue;
+						}
+					}
+					arrow.drawToV2(window, timeStep, (i == deleteStep && i < deleteIndex));
+				}
+				else if (mode == InsertOption::HEAD) {
+					if (deleteStep > 1 && i == 0)
+						continue;
+					arrow.drawToV2(window, timeStep, (i == deleteStep && deleteStep == 0));
+				
+				}
+			}
+			else if (inserting) {
+				arrow.drawToV2(window, timeStep, (insertStep == i && i < insertIndex));
+			}
+			else if(searching) {
+				arrow.drawTo(window, timeStep, !inserting && (searching && searchStep == i && !found));
+			}
+			else {
+				arrow.drawToV2(window, timeStep, false);
+			}
 		}
 
 		if (inserting) {
@@ -346,7 +678,7 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 					textureLL.loadFromFile("resources/blocks/LinkedList.png");
 					Sprite llBlock;
 					llBlock.setTexture(textureLL);
-					llBlock.setPosition(Vector2f(127 + 160, 250));
+					llBlock.setPosition(Vector2f(127 + 160 * insertIndex, 250));
 
 					Text value;
 					value.setCharacterSize(18);
@@ -355,7 +687,7 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 					value.setString(to_string(insertValue));
 					value.setFillColor(Color::Black);
 
-					if (insertStep == 2) {
+					if (insertStep == 2 && arrSize > 0) {
 						int timeStep = clock.getElapsedTime().asMilliseconds();
 						Vector2f startPosition = utils::get4sizesCoords(llBlock)[1];
 						Vector2f endPosition = utils::get4sizesCoords(allLLBlocks[0])[0];
@@ -381,7 +713,7 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 					value.setString(to_string(insertValue));
 					value.setFillColor(Color::Black);
 
-					if (insertStep == 1) {
+					if (insertStep == 1 && arrSize > 0) {
 						int timeStep = clock.getElapsedTime().asMilliseconds();
 						Vector2f startPosition = utils::get4sizesCoords(allLLBlocks[arrSize-1])[1];
 						Vector2f endPosition = utils::get4sizesCoords(llBlock)[0];
@@ -430,17 +762,52 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 			default:
 				break;
 			}
+		}
 
+		// Draw Head/Tail
+		if (arrSize == 1) {
 
+			Vector2f firstCenter = Vector2f(allLLBlocks[0].getPosition().x + allLLBlocks[0].getGlobalBounds().width / 2,
+				allLLBlocks[0].getPosition().y + allLLBlocks[0].getGlobalBounds().height / 2);
+			
+			Text head("Head/Tail", font, 20);
+			head.setFillColor(Color::Red);
+			head.setPosition(firstCenter.x - head.getGlobalBounds().width / 2, firstCenter.y + 50);
+			window.draw(head);
+		}
+		else if (arrSize > 1) {
+			Vector2f firstCenter = Vector2f(allLLBlocks[0].getPosition().x + allLLBlocks[0].getGlobalBounds().width / 2,
+				allLLBlocks[0].getPosition().y + allLLBlocks[0].getGlobalBounds().height / 2);
 
+			Vector2f lastCenter = Vector2f(allLLBlocks[arrSize - 1].getPosition().x + allLLBlocks[arrSize - 1].getGlobalBounds().width / 2,
+				allLLBlocks[arrSize - 1].getPosition().y + allLLBlocks[arrSize - 1].getGlobalBounds().height / 2);
+
+			Text head("Head", font, 20);
+			head.setFillColor(Color::Red);
+			head.setPosition(firstCenter.x - head.getGlobalBounds().width / 2, firstCenter.y + 40);
+			
+			Text tail("Tail", font, 20);
+			tail.setFillColor(Color::Red);
+			tail.setPosition(lastCenter.x - tail.getGlobalBounds().width / 2, lastCenter.y + 40);
+
+			window.draw(head);
+			window.draw(tail);
 		}
 	}
+}
+
+void SinglyLL::drawCodeCells(RenderWindow &window, Event &event) {
+
+	codeBlock.drawTo(window, event);
 }
 
 void SinglyLL::display(RenderWindow& window, Event& event, int& displayMode) {
 	drawPageLayout(window, event, displayMode);
 	visualize(window, event);
 	startInserting();
+	search();
+	drawCodeCells(window, event);
+	deleteAtIndex();
 }
 
 SinglyLL::~SinglyLL() {}

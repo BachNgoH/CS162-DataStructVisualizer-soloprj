@@ -2,6 +2,7 @@
 #include "BasePage.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
+#include "CodeCell.h"
 
 enum InsertOption {
 	HEAD = 0,
@@ -15,6 +16,8 @@ class SinglyLL : public BasePage
 	bool searching = false;
 	int searchStep = 0;
 	int search_value;
+	float searchStepTime = 1000.f;
+	bool found = false;
 
 	// Insert Attributes
 	bool inserting = false;
@@ -25,6 +28,14 @@ class SinglyLL : public BasePage
 	float insertStepTime = 1000.f;
 	int mode = InsertOption::HEAD;
 
+	// Delete Attributes
+	bool deleting = false;
+	int deleteIndex;
+	int deleteStep = 0;
+	float deleteStepTime = 500.f;
+	int totalDeleteStep = 0;
+	CodeCell codeBlock;
+
 	void startSearching(int value);
 	void stopSearching();
 	void startDeleting(int index);
@@ -34,6 +45,9 @@ class SinglyLL : public BasePage
 	void initVisualizing(int &option, int initializeOptions) override;
 	void visualize(RenderWindow& window, Event& event);
 	void drawInsert(int& option);
+	void search();
+	void deleteAtIndex();
+	void drawCodeCells(RenderWindow &window, Event &event);
 
 public:
 	SinglyLL();

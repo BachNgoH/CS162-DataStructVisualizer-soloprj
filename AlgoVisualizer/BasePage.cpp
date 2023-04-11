@@ -373,7 +373,6 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 				case (Event::MouseButtonPressed):
 					cout << mousePos.x << ", " << mousePos.y << endl;
 					if (mousePos.x > 171 && mousePos.x < 171 + 257 && mousePos.y > 174 && mousePos.y < 174 + 52) {
-						cout << "HERE" << endl;
 						valueTextbox.setSelected(true);
 					}
 					else {
@@ -467,18 +466,22 @@ void BasePage::displayControlOptions(int& option, RenderWindow& window, Event& e
 
 						if (!indexTextbox.isEmpty()) {
 							int index = stoi(indexTextbox.getText());
-							deleteWindow.close();
-							option = 0;
+							if (index >= arrSize) {
+								errorMessage.setString("Invalid Index");
+							}
+							else {
+								deleteWindow.close();
+								option = 0;
 
-							// Start Delete
-							startDeleting(index);
-							clock.restart();
-							stopSearching();
-							deleteWindow.close();
-
+								// Start Delete
+								startDeleting(index);
+								clock.restart();
+								stopSearching();
+								deleteWindow.close();
+							}
 						}
 						else {
-							errorMessage.setString("Value and Index are Required!");
+							errorMessage.setString("Index is Required!");
 						}
 					}
 				case (Event::TextEntered):
@@ -515,8 +518,11 @@ void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMo
 	bgTexture.loadFromFile(bgPath);
 	Sprite bg(bgTexture);
 
+	Font backFont;
+	backFont.loadFromFile("resources/fonts/PressStart2P-Regular.ttf");
+
 	Text back;
-	back.setFont(font);
+	back.setFont(backFont);
 	back.setString("<");
 	back.setCharacterSize(20);
 	back.setFillColor(Color::White);

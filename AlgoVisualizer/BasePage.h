@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "TextBox.h"
+#include <stack>
 using namespace sf;
 using namespace std;
 
@@ -17,6 +18,8 @@ public:
 	Font font;
 	Clock clock;
 	bool includeSize = true;
+	stack<vector<Drawable*>> callStack;
+	vector<Drawable*>  states;
 
 	BasePage();
 	~BasePage();
