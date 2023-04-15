@@ -40,14 +40,22 @@ class SinglyLL : public BasePage
 	void stopSearching();
 	void startDeleting(int index);
 	void stopDeleting();	
-	void startInserting();
+	void startInserting(int index, int value);
 
+	void previousStep();
+	void nextStep();
+
+	void insertToArray();
 	void initVisualizing(int &option, int initializeOptions) override;
 	void visualize(RenderWindow& window, Event& event);
 	void drawInsert(int& option);
 	void search();
 	void deleteAtIndex();
 	void drawCodeCells(RenderWindow &window, Event &event);
+
+	void setCodeBlockDelete();
+	void setCodeBlockInsert();
+	void setCodeBlockSearch();
 
 public:
 	SinglyLL();

@@ -11,6 +11,8 @@ public:
 
 	string bgPath;
 	vector<int> arr;
+	vector<vector<int>> arrStates;
+
 	int option = 0;
 	int arrSize = -1;
 	bool isVisualizing = false;
@@ -18,8 +20,9 @@ public:
 	Font font;
 	Clock clock;
 	bool includeSize = true;
-	stack<vector<Drawable*>> callStack;
-	vector<Drawable*>  states;
+	
+	bool isPaused = false;
+	int clickDelay = 0;
 
 	BasePage();
 	~BasePage();
@@ -28,6 +31,7 @@ public:
 		int& option, int& initializeOpt, Text& errorMessage);
 	void displayControlOptions(int& option, RenderWindow& window, Event& event);
 	void drawPageLayout(RenderWindow& window, Event& event, int& displayMode);
+	void drawPlayerControls(RenderWindow& window, Event& event);
 
 	virtual void startSearching(int value);
 	virtual void stopSearching();
@@ -37,5 +41,7 @@ public:
 	virtual void initVisualizing(int& option, int initializeOptions);
 	virtual void drawInsert(int& option);
 	virtual void drawUpdate(int& option);
-
+	virtual void nextStep();
+	virtual void previousStep();
+	virtual void pauseAnimation();
 };

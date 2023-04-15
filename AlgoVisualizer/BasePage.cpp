@@ -513,6 +513,68 @@ void BasePage::stopSearching() {}
 void BasePage::startDeleting(int index) {}
 void BasePage::stopDeleting() {}
 
+void BasePage::nextStep() { cout << "NEXT CLICKED" << endl; }
+void BasePage::previousStep() { cout << "PREVIOUS CLICKED" << endl; }
+void BasePage::pauseAnimation() {
+	isPaused = !isPaused;
+}
+
+void BasePage::drawPlayerControls(RenderWindow& window, Event& event) {
+	clickDelay += 1;
+
+	RectangleShape bgRect;
+	bgRect.setSize(Vector2f(410, 73));
+	bgRect.setFillColor(Color(22, 185, 132));
+	bgRect.setPosition(436, 846);
+	Vector2i mousePos = Mouse::getPosition(window);
+
+	Texture leftTexture; leftTexture.loadFromFile("resources/blocks/LeftTriangle.png");
+	Sprite leftButton; leftButton.setTexture(leftTexture);
+	leftButton.setPosition(549, 870);
+
+	if (utils::isHover(leftButton, mousePos)) {
+		leftTexture.loadFromFile("resources/blocks/LeftTriangle-Selected.png");
+		leftButton.setTexture(leftTexture);
+	}
+
+	Texture rightTexture; rightTexture.loadFromFile("resources/blocks/RightTriangle.png");
+	Sprite rightButton; rightButton.setTexture(rightTexture);
+	rightButton.setPosition(705, 870);
+	if (utils::isHover(rightButton, mousePos)) {
+		rightTexture.loadFromFile("resources/blocks/RightTriangle-Selected.png");
+		rightButton.setTexture(rightTexture);
+	}
+
+
+	Texture pauseTexture; 
+	if (!isPaused)
+		pauseTexture.loadFromFile("resources/blocks/StopButton.png");
+	else
+		pauseTexture.loadFromFile("resources/blocks/StartButton.png");
+	Sprite pauseButton; pauseButton.setTexture(pauseTexture);
+	pauseButton.setPosition(623, 868);
+	
+	if (event.type == Event::MouseButtonPressed) {
+		if (utils::isHover(leftButton, mousePos) && clickDelay >= 8) {
+			previousStep();
+			clickDelay = 0;
+		}
+		else if (utils::isHover(rightButton, mousePos) && clickDelay >= 8) {
+			nextStep();
+			clickDelay = 0;
+		}
+		else if (utils::isHover(pauseButton, mousePos) && clickDelay >= 8) {
+			pauseAnimation();
+			clickDelay = 0;
+		}
+	}
+
+	window.draw(bgRect);
+	window.draw(rightButton);
+	window.draw(leftButton);
+	window.draw(pauseButton);
+}
+
 void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMode) {
 	Texture bgTexture;
 	bgTexture.loadFromFile(bgPath);
@@ -558,7 +620,8 @@ void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMo
 
 	if (event.type == Event::MouseMoved)
 		mousePos = Mouse::getPosition(window);
-	if (utils::isHover(back, mousePos)) {
+	if (utils::isHover(back, mousePos) || 
+		(mousePos.x >= 623 && mousePos.x <= 658 && mousePos.y >= 868 && mousePos.y <= 898)) {
 		Cursor cursor;
 		if (cursor.loadFromSystem(sf::Cursor::Hand))
 			window.setMouseCursor(cursor);
@@ -599,6 +662,7 @@ void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMo
 	}
 
 	displayControlOptions(option, window, event);
+	drawPlayerControls(window, event);
 	window.draw(back);
 }
 
