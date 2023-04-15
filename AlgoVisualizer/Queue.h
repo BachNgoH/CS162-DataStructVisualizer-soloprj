@@ -1,20 +1,20 @@
 #pragma once
 #include "BasePage.h"
+#include "SinglyLL.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 
-class Queue : public BasePage
+class Queue : public SinglyLL
 {
 
-	void visualize(RenderWindow& window, Event& event);
+	void drawEnqueue(int& option);
+	void drawDequeue(int& option);
 
-	void startSearching(int value);
-	void stopSearching();
-	void startDeleting(int index);
-	void stopDeleting();
+	void startEnqueue(int value);
+	void displayControlOptions(int& option, RenderWindow& window, Event& event) override;
+
 public:
 	Queue();
 	~Queue();
-	void display(RenderWindow& window, Event& event, int& displayMode);
 
 };

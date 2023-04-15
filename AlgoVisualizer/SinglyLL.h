@@ -12,6 +12,7 @@ enum InsertOption {
 
 class SinglyLL : public BasePage
 {
+public:
 	// Search Attributes
 	bool searching = false;
 	int searchStep = 0;
@@ -57,7 +58,8 @@ class SinglyLL : public BasePage
 	void setCodeBlockInsert();
 	void setCodeBlockSearch();
 
-public:
+	virtual void displayControlOptions(int& option, RenderWindow& window, Event& event);
+
 	SinglyLL();
 	~SinglyLL();
 	void display(RenderWindow& window, Event& event, int& displayMode);

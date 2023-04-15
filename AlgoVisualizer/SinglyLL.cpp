@@ -612,6 +612,10 @@ void SinglyLL::deleteAtIndex() {
 	}
 }
 
+void SinglyLL::displayControlOptions(int& option, RenderWindow& window, Event& event) {
+	__super::displayControlOptions(option, window, event);
+}
+
 void SinglyLL::visualize(RenderWindow &window, Event &event) {
 
 	if (isVisualizing) {

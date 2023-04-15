@@ -12,6 +12,7 @@ public:
 	string bgPath;
 	vector<int> arr;
 	vector<vector<int>> arrStates;
+	vector<string> controlOptions;
 
 	int option = 0;
 	int arrSize = -1;
@@ -29,9 +30,10 @@ public:
 	void display(RenderWindow& window, Event& event, int& displayMode);
 	void displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
 		int& option, int& initializeOpt, Text& errorMessage);
-	void displayControlOptions(int& option, RenderWindow& window, Event& event);
+	virtual void displayControlOptions(int& option, RenderWindow& window, Event& event);
 	void drawPageLayout(RenderWindow& window, Event& event, int& displayMode);
 	void drawPlayerControls(RenderWindow& window, Event& event);
+
 
 	virtual void startSearching(int value);
 	virtual void stopSearching();
@@ -39,8 +41,13 @@ public:
 	virtual void startDeleting(int index);
 	virtual void stopDeleting();
 	virtual void initVisualizing(int& option, int initializeOptions);
+	
 	virtual void drawInsert(int& option);
 	virtual void drawUpdate(int& option);
+	virtual void drawInitialize(int& option);
+	virtual void drawDelete(int& option);
+	virtual void drawSearch(int& option);
+	
 	virtual void nextStep();
 	virtual void previousStep();
 	virtual void pauseAnimation();
