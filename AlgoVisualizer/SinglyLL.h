@@ -1,14 +1,10 @@
 #pragma once
+
 #include "BasePage.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "CodeCell.h"
-
-enum InsertOption {
-	HEAD = 0,
-	TAIL = 1,
-	INDEX = 2,
-};
+#include "InsertOptions.h"
 
 class SinglyLL : public BasePage
 {
@@ -48,7 +44,6 @@ public:
 
 	void insertToArray();
 	void initVisualizing(int &option, int initializeOptions) override;
-	void visualize(RenderWindow& window, Event& event);
 	void drawInsert(int& option);
 	void search();
 	void deleteAtIndex();
@@ -58,6 +53,7 @@ public:
 	void setCodeBlockInsert();
 	void setCodeBlockSearch();
 
+	virtual void visualize(RenderWindow& window, Event& event);
 	virtual void displayControlOptions(int& option, RenderWindow& window, Event& event);
 
 	SinglyLL();

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="BasePage.cpp" />
     <ClCompile Include="CircularLL.cpp" />
     <ClCompile Include="DoublyLL.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="DoublyLL.h" />
     <ClInclude Include="DynamicArray.h" />
     <ClInclude Include="HomeScreen.h" />
+    <ClInclude Include="InsertOptions.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="SinglyLL.h" />
     <ClInclude Include="Stack.h" />

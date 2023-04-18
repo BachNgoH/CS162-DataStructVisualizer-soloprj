@@ -39,9 +39,9 @@ void Queue::startEnqueue(int value) {
 }
 
 void Queue::drawEnqueue(int& option) {
-	RenderWindow pushWindow(VideoMode(600, 400), "Push", Style::Titlebar | Style::Close);
+	RenderWindow pushWindow(VideoMode(600, 400), "Enqueue", Style::Titlebar | Style::Close);
 	Texture bgTexture;
-	bgTexture.loadFromFile("resources/backgrounds/Push-bg.png");
+	bgTexture.loadFromFile("resources/backgrounds/Enqueue-bg.png");
 	Sprite pushBg;
 	pushBg.setTexture(bgTexture);
 

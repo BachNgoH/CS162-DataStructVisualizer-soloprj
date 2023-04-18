@@ -1,4 +1,4 @@
-﻿  Queue.cpp
+﻿  DoublyLL.cpp
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(80,22): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(106,30): warning C4018: '<=': signed/unsigned mismatch
@@ -37,6 +37,40 @@ C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(88
           ]
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(108,31): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(119,33): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Queue.cpp(28,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\Queue.cpp(190,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(60,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(75,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(251,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(435,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(447,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(461,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(467,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(515,26): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(526,26): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(600,26): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(606,26): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(632,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(637,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(642,26): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(873,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(878,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(910,39): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(915,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(948,44): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\DoublyLL.cpp(954,28): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   AlgoVisualizer.vcxproj -> C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\Debug\AlgoVisualizer.exe
