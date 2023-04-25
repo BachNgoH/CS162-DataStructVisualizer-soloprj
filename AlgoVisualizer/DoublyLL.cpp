@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "TextBox.h"
 #include <string>
+#include <fstream>
 
 using namespace std;
 using namespace sf;
@@ -21,6 +22,8 @@ void DoublyLL::initVisualizing(int& option, int initializeOptions)
 	isVisualizing = true;
 	clock.restart();
 	stopSearching();
+	ifstream inputFile("file_io/input.txt");
+
 	switch (initializeOptions) {
 		// empty
 	case 0:
@@ -37,6 +40,13 @@ void DoublyLL::initVisualizing(int& option, int initializeOptions)
 		break;
 		// user defined
 	case 2:
+		int a;
+		arr.clear();
+		if (inputFile.is_open()) {
+			while (inputFile >> a)
+				arr.push_back(a);
+		}
+		arrSize = arr.size();
 		break;
 	default:
 		break;

@@ -42,6 +42,9 @@ public:
 	virtual void stopDeleting();
 	virtual void initVisualizing(int& option, int initializeOptions);
 	
+	virtual void startUpdating(int index, int value);
+	virtual void stopUpdating();
+
 	virtual void drawInsert(int& option);
 	virtual void drawUpdate(int& option);
 	virtual void drawInitialize(int& option);

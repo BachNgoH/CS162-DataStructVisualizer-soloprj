@@ -168,7 +168,7 @@ vector<Sprite> HomeScreen::getButtons(RenderWindow &window, Event &event, int vi
 void HomeScreen::display(RenderWindow& window, Event &event, int &displayMode) {
 	float moveSpeed = 500.f;
 	window.setFramerateLimit(60);
-
+	timeDelay += 1;
 
 	drawBackground(window);
 	
@@ -183,22 +183,23 @@ void HomeScreen::display(RenderWindow& window, Event &event, int &displayMode) {
 			Sprite button = buttons[i];
 
 
-			if (utils::isHover(button, mousePos)) {
+			if (utils::isHover(button, mousePos) && timeDelay >= 5) {
 				// Right Button Pressed
 				if (i == 1) {
 					clock.restart();
 					if (viewOption < cardsNum - 3) {
-						viewOption++;
+						viewOption+=1;
 						clickMoveRight = true;
 					}
 				}// Left Button Pressed
 				if (i == 0) {
 					clock.restart();
 					if (viewOption > 0) {
-						viewOption--;
+						viewOption-=1;
 						clickMoveLeft = true;
 					}
 				}
+				timeDelay = 0;
 			}
 		}
 

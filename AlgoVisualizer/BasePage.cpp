@@ -1,6 +1,7 @@
 #include "BasePage.h"
 #include "utils.h"
 #include <iostream>
+#include <fstream>
 
 enum InitializeOptions {
 	EMPTY = 0,
@@ -141,8 +142,129 @@ void BasePage::drawInsert(int &option) {
 }
 
 void BasePage::drawUpdate(int &option) {
-	drawInsert(option);
+
+	string windowTitle = "Update Array";
+
+	RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
+	Font font;
+	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
+
+	TextBox valueTextBox(18, Color::White, false);
+	valueTextBox.setFont(font);
+	valueTextBox.setPosition(Vector2f(376, 106));
+	valueTextBox.setLimit(true, 1);
+	//sizeTextBox.setString(std::to_string(arrSize));
+
+	Texture vboxTexture;
+	vboxTexture.loadFromFile("resources/blocks/ValueBox.png");
+	Sprite valueBox;
+	valueBox.setTexture(vboxTexture);
+	valueBox.setPosition(Vector2f(171, 92));
+
+	TextBox indexTextBox(18, Color::White, false);
+	indexTextBox.setFont(font);
+	indexTextBox.setPosition(Vector2f(376, 215));
+	indexTextBox.setLimit(true, 1);
+
+	Texture iboxTexture;
+	iboxTexture.loadFromFile("resources/blocks/IndexBox.png");
+	Sprite indexBox;
+	indexBox.setTexture(iboxTexture);
+	indexBox.setPosition(Vector2f(171, 200));
+
+	Texture doneTexture;
+	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
+
+	Sprite doneButton;
+	doneButton.setTexture(doneTexture);
+	doneButton.setPosition(Vector2f(503, 346));
+
+	Text errorMessage;
+	errorMessage.setFont(font);
+	errorMessage.setFillColor(Color::Red);
+	errorMessage.setCharacterSize(15);
+	errorMessage.setPosition(Vector2f(171, 276));
+
+	while (addWindow.isOpen()) {
+		Event aevent;
+		Vector2i mousePos = Mouse::getPosition(addWindow);
+
+		while (addWindow.pollEvent(aevent)) {
+			switch (aevent.type) {
+			case Event::Closed:
+				addWindow.close();
+				option = 0;
+				break;
+			case Event::TextEntered:
+				valueTextBox.typedOn(aevent);
+				indexTextBox.typedOn(aevent);
+				break;
+			case Event::MouseButtonPressed:
+				if (utils::isHover(valueBox, mousePos)) {
+					valueTextBox.setSelected(true);
+					indexTextBox.setSelected(false);
+				}
+				else if (utils::isHover(indexBox, mousePos)) {
+					valueTextBox.setSelected(false);
+					indexTextBox.setSelected(true);
+				}
+				else {
+					valueTextBox.setSelected(false);
+					indexTextBox.setSelected(false);
+				}
+
+				if (utils::isHover(doneButton, mousePos)) {
+
+					if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty()) {
+						int index = stoi(indexTextBox.getText());
+						int value = stoi(valueTextBox.getText());
+
+						if (index >= arrSize || index < 0) {
+							//cout << errorMessage.getString().toAnsiString() << endl;
+							errorMessage.setString("Invalid index");
+						}
+						else {
+							stopSearching();
+							stopDeleting();
+							startUpdating(value, index);
+							addWindow.close();
+							option = 0;
+						}
+					}
+					else {
+						errorMessage.setString("Value and Index are Required!");
+					}
+				}
+				break;
+			default:
+				break;
+			}
+		}
+
+		addWindow.clear(Color(232, 232, 232));
+
+		if (utils::isHover(doneButton, mousePos)) {
+			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
+			doneButton.setTexture(doneTexture);
+		}
+		else {
+			doneTexture.loadFromFile("resources/buttons/DoneButton.png");
+			doneButton.setTexture(doneTexture);
+		}
+
+		addWindow.draw(doneButton);
+		addWindow.draw(valueBox);
+		addWindow.draw(indexBox);
+		valueTextBox.drawTo(addWindow);
+		indexTextBox.drawTo(addWindow);
+		addWindow.draw(errorMessage);
+
+		addWindow.display();
+	}
 }
+
+void BasePage::startUpdating(int value, int index) {}
+void BasePage::stopUpdating() {}
 
 void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& sizeTextBox, RectangleShape& sizeRect,
 	int& option, int& intializeOpt, Text& errorMessage) {
@@ -213,6 +335,21 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 				initVisualizing(option, intializeOpt);
 				window.close();
 			}
+			else if (intializeOpt == InitializeOptions::USER_DEFINED) {
+				isVisualizing = true;
+				// arr.resize(arrSize);
+				stopSearching();
+				ifstream inputFile("file_io/input.txt");
+				int a;
+				arr.clear();
+				if (inputFile.is_open()) {
+					while (inputFile >> a)
+						arr.push_back(a);
+				}
+				arrSize = arr.size();
+				window.close();
+				option = 0;
+			}
 			else if (sizeTextBox.isEmpty()) {
 				errorMessage.setString("array size is required!");
 			}
@@ -226,6 +363,7 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 				stopSearching();
 
 				cout << "INIT OPT: " << intializeOpt << endl;
+
 				switch (intializeOpt) {
 				case InitializeOptions::EMPTY:
 					for (int i = 0; i < arrSize; i++) {
@@ -244,6 +382,7 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 				option = 0;
 			}
 		}
+	
 	}
 
 
@@ -568,15 +707,15 @@ void BasePage::drawPlayerControls(RenderWindow& window, Event& event) {
 	pauseButton.setPosition(623, 868);
 	
 	if (event.type == Event::MouseButtonPressed) {
-		if (utils::isHover(leftButton, mousePos) && clickDelay >= 8) {
+		if (utils::isHover(leftButton, mousePos) && clickDelay >= 5) {
 			previousStep();
 			clickDelay = 0;
 		}
-		else if (utils::isHover(rightButton, mousePos) && clickDelay >= 8) {
+		else if (utils::isHover(rightButton, mousePos) && clickDelay >= 5) {
 			nextStep();
 			clickDelay = 0;
 		}
-		else if (utils::isHover(pauseButton, mousePos) && clickDelay >= 8) {
+		else if (utils::isHover(pauseButton, mousePos) && clickDelay >= 5) {
 			pauseAnimation();
 			clickDelay = 0;
 		}

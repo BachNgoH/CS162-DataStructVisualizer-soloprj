@@ -20,6 +20,7 @@ public:
     void setStartPosition(Vector2f startPosition);
     void setEndPosition(Vector2f endPosition);
     void setAnimatingTime(float animatingTime);
+    void drawReverseArrow(sf::RenderWindow& window, int timeStep, bool animating);
 
 private:
     sf::VertexArray m_vertices;
