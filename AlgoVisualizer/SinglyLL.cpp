@@ -8,13 +8,12 @@
 #include <fstream>
 using namespace std;
 
-
-
 SinglyLL::SinglyLL() {
 	bgPath = "resources/SinglyLinkedList-Background.png";
 	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
 	includeSize = false;
 	codeBlock.setFont(font);
+	maxArrSize = 8;
 
 }
 
@@ -24,6 +23,8 @@ void SinglyLL::initVisualizing(int& option, int initializeOptions)
 	isVisualizing = true;
 	clock.restart();
 	stopSearching();
+	stopUpdating();
+
 	ifstream inputFile("file_io/input.txt");
 
 	switch (initializeOptions) {
@@ -56,7 +57,158 @@ void SinglyLL::initVisualizing(int& option, int initializeOptions)
 
 }
 
+void SinglyLL::previousStep() {
+	isPaused = true;
+
+	if (searching) {
+		searchStep = max(searchStep - 1, 0);
+		setCodeBlockSearch();
+	}
+	else if (updating) {
+		updateStep = max(updateStep - 1, 0);
+		arr = arrStates[updateStep];
+		setCodeBlockUpdate();
+	}
+	else if (inserting) {
+		insertStep = max(insertStep - 1, 0);
+		setCodeBlockInsert();
+		arr = arrStates[insertStep];
+		arrSize = arr.size();
+	}
+	else if (deleting) {
+		deleteStep = max(deleteStep - 1, 0);
+		setCodeBlockDelete();
+		arr = arrStates[deleteStep];
+		arrSize = arr.size();
+	}
+}
+
+void SinglyLL::nextStep() {
+
+
+	if (searching) {
+		if(search_value != arr[searchStep])
+			searchStep += 1;
+		setCodeBlockSearch();
+	}
+	else if (updating) {
+		if (updateStep != updateIndex)
+			updateStep += 1;
+		setCodeBlockUpdate();
+
+	}
+	else if (inserting) {
+		if (insertStep < totalInsertStep ) {
+			// cout << insertStep << endl;
+			
+			setCodeBlockInsert();
+			insertStep += 1;
+			if(arrStates.size() <= insertStep)
+				arrStates.push_back(arr);
+
+			clock.restart();
+		}
+		else if(insertStep == totalInsertStep) { // if(insertStep == totalInsertStep - 1) {
+			// inserting = false;
+			insertStep += 1;
+			if (mode == InsertOption::HEAD || mode == InsertOption::TAIL)
+				codeBlock.setSelectedLine(2);
+			else
+				codeBlock.setSelectedLine(-1);
+			if (arrStates.size() <= insertStep) {
+				arrSize += 1;
+				arr.insert(arr.begin() + insertIndex, insertValue);
+				arrStates.push_back(arr);
+			}
+			else {
+				arr = arrStates[insertStep];
+				arrSize = arr.size();
+			}
+		}
+	}
+	else if (deleting) {
+		if (deleteStep < totalDeleteStep) {
+			deleteStep += 1;
+			if(arrStates.size() <= deleteStep)
+				arrStates.push_back(arr);
+			setCodeBlockDelete();
+		}
+		else if (deleteStep == totalDeleteStep) {
+			deleteStep += 1;
+			if (arrStates.size() <= deleteStep) {
+				arr.erase(arr.begin() + deleteIndex);
+				arrStates.push_back(arr);
+				arrSize = arr.size();
+			}
+			else {
+				arr = arrStates[deleteStep];
+				arrSize = arr.size();
+			}
+			codeBlock.setSelectedLine(-1);
+		}
+		clock.restart();
+	}
+	isPaused = true;
+}
+
+// -------------------------------- INSERT ------------------------------------- //
+
+void SinglyLL::setCodeBlockInsert() {
+	switch (mode) {
+	case (InsertOption::INDEX):
+		if (insertStep < insertIndex - 1) {
+			codeBlock.setSelectedLine(1, 2);
+		}
+		else if (insertStep >= insertIndex - 1 && insertStep <= insertIndex) {
+			codeBlock.setSelectedLine(3);
+		}
+		else if (insertStep > insertIndex) {
+			codeBlock.setSelectedLine(insertStep - insertIndex + 3);
+		}
+		break;
+	case(InsertOption::HEAD):
+		codeBlock.setSelectedLine(insertStep);
+		break;
+	case(InsertOption::TAIL):
+		codeBlock.setSelectedLine(insertStep + 1);
+		break;
+	}
+}
+
+void SinglyLL::insertToArray() {
+	if (inserting) {
+		if (clock.getElapsedTime().asMilliseconds() >= insertStepTime && !isPaused) {
+			if (insertStep < totalInsertStep) {
+				// cout << insertStep << endl;
+				setCodeBlockInsert();
+				insertStep += 1;
+				clock.restart();
+				if(arrStates.size() <= insertStep)
+					arrStates.push_back(arr);
+
+			}
+			else if (insertStep == totalInsertStep) {
+				// inserting = false;
+				insertStep += 1;
+				if(mode == InsertOption::HEAD || mode == InsertOption::TAIL)
+					codeBlock.setSelectedLine(2);
+				if (arrStates.size() <= insertStep) {
+					arr.insert(arr.begin() + insertIndex, insertValue);
+					arrSize = arr.size();
+					arrStates.push_back(arr);
+				}
+				else {
+					arr = arrStates[insertStep];
+					arrSize = arr.size();
+				}
+			}
+
+		}
+	}
+}
+
 void SinglyLL::startInserting(int index, int value) {
+	stopUpdating();
 	insertValue = value;
 	insertIndex = index;
 	if (index == arrSize) {
@@ -113,196 +265,44 @@ void SinglyLL::startInserting(int index, int value) {
 	insertStep = 0;
 }
 
-void SinglyLL::drawInsert(int &option) {
-	string windowTitle = "Insert To Array";
+// -------------------------------- SEARCH ------------------------------------- //
 
-	RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
-	vector<string> text = {"Head", "Tail", "Index:", "Value:"};
-	vector<Vector2f> positions = { {171,60}, {171,125}, {171,196}, {171,267} };
-	vector<Vector2f> textPositions = { {276,74}, {273,136}, {195,207}, {195,278} };
-	vector<RectangleShape> boxes;
-	vector<Text> allText;
-	boxes.resize(text.size());
-	allText.resize(text.size());
-
-	for (size_t i = 0; i < text.size(); i++)
-	{
-		boxes[i].setSize(Vector2f(257, 52));
-		boxes[i].setFillColor(Color(217, 217, 217));
-		boxes[i].setPosition(positions[i]);
-
-		allText[i].setString(text[i]);
-		allText[i].setFont(font);
-		allText[i].setCharacterSize(20);
-		allText[i].setPosition(textPositions[i]);
-		allText[i].setFillColor(Color::Black);
+void SinglyLL::setCodeBlockSearch() {
+	if (searchStep == 0) {
+		codeBlock.setSelectedLine(1);
+		return;
 	}
-
-	// Value Box
-	TextBox valueTextBox(18, Color::Black, false);
-	valueTextBox.setFont(font);
-	valueTextBox.setPosition(Vector2f(376, 281));
-	valueTextBox.setLimit(true, 1);
+	if (searchStep < arrSize) {
+		if (arr[searchStep] != search_value)
+			codeBlock.setSelectedLine(2, 3);
+		else
+			codeBlock.setSelectedLine(6);
+	}
+	else 
+		codeBlock.setSelectedLine(5);
 	
-	RectangleShape valueRect;
-	valueRect.setSize(Vector2f(45, 27));
-	valueRect.setFillColor(Color(217, 217, 217));
-	valueRect.setPosition(365, 280);
+}
 
-	// Index Box
-	TextBox indexTextBox(18, Color::Black, false);
-	indexTextBox.setFont(font);
-	indexTextBox.setPosition(Vector2f(376, 210));
-	indexTextBox.setLimit(true, 1);
-
-	RectangleShape indexRect;
-	indexRect.setSize(Vector2f(45, 27));
-	indexRect.setFillColor(Color(217, 217, 217));
-	indexRect.setPosition(365, 209);
-
-	// Done Button
-	Texture doneTexture;
-	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-	Sprite doneButton;
-	doneButton.setTexture(doneTexture);
-	doneButton.setPosition(Vector2f(503, 346));
-
-	// Error Message
-	Text errorMessage;
-	errorMessage.setFont(font);
-	errorMessage.setFillColor(Color::Red);
-	errorMessage.setCharacterSize(15);
-	errorMessage.setPosition(Vector2f(171, 334));
-
-
-	int addOption = InsertOption::HEAD;
-
-	while (addWindow.isOpen()) {
-		Event aevent;
-		Vector2i mousePos = Mouse::getPosition(addWindow);
-
-		while (addWindow.pollEvent(aevent)) {
-			switch (aevent.type) {
-			case Event::Closed:
-				addWindow.close();
-				option = 0;
-				break;
-			case Event::TextEntered:
-				valueTextBox.typedOn(aevent);
-				indexTextBox.typedOn(aevent);
-				break;
-			case Event::MouseButtonPressed:
-				if (utils::isHover(boxes[3], mousePos)) {
-					valueTextBox.setSelected(true);
-					indexTextBox.setSelected(false);
-				}
-				else if (utils::isHover(boxes[2], mousePos)) {
-					valueTextBox.setSelected(false);
-					indexTextBox.setSelected(true);
-				}
-				else {
-					valueTextBox.setSelected(false);
-					indexTextBox.setSelected(false);
-				}
-
-				if (utils::isHover(doneButton, mousePos)) {
-					if (arrSize == 8) {
-						errorMessage.setString("The Max Array Size is 8");
-					}
-					else if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty() && addOption == InsertOption::INDEX) {
-						int index = stoi(indexTextBox.getText());
-						int value = stoi(valueTextBox.getText());
-
-						if (index >= arrSize || index < 0) {
-							//cout << errorMessage.getString().toAnsiString() << endl;
-							errorMessage.setString("Invalid index");
-						}
-						else {
-							startInserting(index, value);
-
-							clock.restart();
-
-							stopSearching();
-							stopDeleting();
-
-							addWindow.close();
-							option = 0;
-							isPaused = false;
-						}
-					}
-					else if (!valueTextBox.isEmpty()) {
-						mode = addOption;
-						insertValue = stoi(valueTextBox.getText());
-						if (mode == InsertOption::HEAD)
-							startInserting(0, insertValue);
-						else {
-							startInserting(arrSize, insertValue);
-						}
-
-						clock.restart();
-						stopSearching();
-						stopDeleting();
-
-						addWindow.close();
-						option = 0;
-
-					}
-					else {
-						errorMessage.setString("Value is Required!");
-					}
-				}
-				break;
-			default:
-				break;
+void SinglyLL::search() {
+	if (searching) {
+		if (clock.getElapsedTime().asMilliseconds() >= searchStepTime && !isPaused) {
+			if (searchStep < arrSize) {
+				if (arr[searchStep] != search_value) 
+					searchStep += 1;
+				else 
+					found = true;
+				clock.restart();
 			}
+			else 
+				codeBlock.setSelectedLine(5);
 		}
 
-		addWindow.clear(Color(232, 232, 232));
-
-		for (int i = 0; i < text.size(); i++) {
-
-			if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1) {
-				boxes[i].setFillColor(Color::Black);
-				allText[i].setFillColor(Color::White);
-			}
-			else {
-				boxes[i].setFillColor(Color(217, 217, 217));
-				allText[i].setFillColor(Color::Black);
-				if (i == text.size() - 1)
-					boxes[i].setFillColor(Color(255, 153, 0));
-			}
-
-			if (aevent.type == Event::MouseButtonPressed) {
-				if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1)
-					addOption = i;
-			}
-
-			if (addOption == i)
-				boxes[i].setFillColor(Color(255, 153, 0));
-
-			addWindow.draw(boxes[i]);
-			addWindow.draw(allText[i]);
-		}
-
-		if (utils::isHover(doneButton, mousePos)) {
-			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
-			doneButton.setTexture(doneTexture);
-		}
-		else {
-			doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-			doneButton.setTexture(doneTexture);
-		}
-
-		addWindow.draw(doneButton);
-		addWindow.draw(indexRect); addWindow.draw(valueRect);
-		valueTextBox.drawTo(addWindow); indexTextBox.drawTo(addWindow);
-		addWindow.draw(errorMessage);
-
-		addWindow.display();
+		setCodeBlockSearch();
 	}
 }
 
 void SinglyLL::startSearching(int value) {
+	stopUpdating();
 	search_value = value;
 	option = 0;
 	searching = true;
@@ -336,7 +336,141 @@ void SinglyLL::stopSearching() {
 
 }
 
+// -------------------------------- UPDATE ------------------------------------- //
+
+void SinglyLL::startUpdating(int value, int index) {
+	updateIndex = index;
+	updateValue = value;
+	option = 0;
+	updated = false;
+	updateStep = 0;
+	updating = true;
+
+	codeBlock.setIsOpen(true);
+	codeBlock.codelines[0] = "if empty, return";
+	codeBlock.codelines[1] = "temp = head";
+	codeBlock.codelines[2] = "for (k = 0; k < i-1; k++)";
+	codeBlock.codelines[3] = "  temp = temp.next";
+	codeBlock.codelines[4] = "  if temp == null";
+	codeBlock.codelines[5] = "    return ";
+	codeBlock.codelines[6] = "temp.val = v";
+
+
+	if (arrSize == 0) {
+		codeBlock.setSelectedLine(0);
+		stopUpdating();
+	}
+	else {
+		codeBlock.setSelectedLine(1);
+	}
+
+	// Array related
+	arrStates.clear();
+	arrStates.push_back(arr);
+}
+
+void SinglyLL::stopUpdating() {
+	updating = false;
+	updated = false;
+	updateStep = 0;
+	isPaused = false;
+}
+
+void SinglyLL::setCodeBlockUpdate() {
+	if (updateStep == 0) {
+		codeBlock.setSelectedLine(1);
+		return;
+	}
+	if (updateStep < arrSize) {
+		if (updateStep != updateIndex)
+			codeBlock.setSelectedLine(2, 3);
+		else
+			codeBlock.setSelectedLine(6);
+	}
+	else
+		codeBlock.setSelectedLine(5);
+}
+
+void SinglyLL::update() {
+	if (updating) {
+		if (clock.getElapsedTime().asMilliseconds() >= updateTimeStep && !isPaused) {
+			if (updateStep < arrSize) {
+				if (updateStep < updateIndex) {
+					updateStep += 1;
+					if (arrStates.size() <= updateStep)
+						arrStates.push_back(arr);
+				}
+				else {
+					if (arrStates.size() <= updateStep) {
+						arr[updateIndex] = updateValue;
+						arrStates.push_back(arr);
+						arrSize = arr.size();
+					}
+					else {
+						arr = arrStates[updateStep];
+						arrSize = arr.size();
+					}
+					updated = true;
+				}
+				clock.restart();
+			}
+			else
+				codeBlock.setSelectedLine(5);
+		}
+		setCodeBlockUpdate();
+	}
+}
+
+// -------------------------------- DELETE ------------------------------------- //
+
+void SinglyLL::setCodeBlockDelete() {
+	if (mode == InsertOption::HEAD) {
+		if (deleteStep == 1)
+			codeBlock.setSelectedLine(2);
+		if (deleteStep == 2)
+			codeBlock.setSelectedLine(3);
+	}
+	else if (mode == InsertOption::TAIL || mode == InsertOption::INDEX) {
+		if (deleteStep < deleteIndex && deleteStep > 0) {
+			codeBlock.setSelectedLine(2, 3);
+		}
+		else if (deleteStep >= deleteIndex && deleteStep <= deleteIndex + 1)
+			codeBlock.setSelectedLine(5);
+		else if (deleteStep >= deleteIndex + 2)
+			codeBlock.setSelectedLine(6);
+	}
+}
+
+void SinglyLL::deleteAtIndex() {
+	if (deleting) {
+		if (clock.getElapsedTime().asMilliseconds() >= deleteStepTime && !isPaused) {
+			// cout << deleteStep << endl;
+			if (deleteStep < totalDeleteStep) {
+				deleteStep += 1;
+				if(arrStates.size() <= deleteStep)
+					arrStates.push_back(arr);
+				setCodeBlockDelete();
+			}
+			else if(deleteStep == totalDeleteStep) {
+				deleteStep += 1;
+				if (arrStates.size() <= deleteStep) {
+					arr.erase(arr.begin() + deleteIndex);
+					arrStates.push_back(arr);
+					arrSize = arr.size();
+				}
+				else {
+					arr = arrStates[deleteStep];
+					arrSize = arr.size();
+				}
+				codeBlock.setSelectedLine(-1);
+			}
+			clock.restart();
+		}
+	}
+}
+
 void SinglyLL::startDeleting(int index) {
+	stopUpdating();
 	deleteIndex = index;
 	option = 0;
 	if (deleteIndex == 0) {
@@ -405,224 +539,9 @@ void SinglyLL::stopDeleting() {
 
 }
 
-void SinglyLL::previousStep() {
-	isPaused = true;
-
-	if (searching) {
-		searchStep = max(searchStep - 1, 0);
-		setCodeBlockSearch();
-	}
-	else if (inserting) {
-		insertStep = max(insertStep - 1, 0);
-		setCodeBlockInsert();
-		arr = arrStates[insertStep];
-		arrSize = arr.size();
-	}
-	else if (deleting) {
-		deleteStep = max(deleteStep - 1, 0);
-		setCodeBlockDelete();
-		arr = arrStates[deleteStep];
-		arrSize = arr.size();
-	}
-}
-
-void SinglyLL::nextStep() {
 
 
-	if (searching) {
-		if(search_value != arr[searchStep])
-			searchStep += 1;
-		setCodeBlockSearch();
-	}
-	else if (inserting) {
-		if (insertStep < totalInsertStep ) {
-			// cout << insertStep << endl;
-			
-			setCodeBlockInsert();
-			insertStep += 1;
-			if(arrStates.size() <= insertStep)
-				arrStates.push_back(arr);
-
-			clock.restart();
-		}
-		else if(insertStep == totalInsertStep) { // if(insertStep == totalInsertStep - 1) {
-			// inserting = false;
-			insertStep += 1;
-			if (mode == InsertOption::HEAD || mode == InsertOption::TAIL)
-				codeBlock.setSelectedLine(2);
-			else
-				codeBlock.setSelectedLine(-1);
-			if (arrStates.size() <= insertStep) {
-				arrSize += 1;
-				arr.insert(arr.begin() + insertIndex, insertValue);
-				arrStates.push_back(arr);
-			}
-			else {
-				arr = arrStates[insertStep];
-				arrSize = arr.size();
-			}
-		}
-	}
-	else if (deleting) {
-		if (deleteStep < totalDeleteStep) {
-			deleteStep += 1;
-			if(arrStates.size() <= deleteStep)
-				arrStates.push_back(arr);
-			setCodeBlockDelete();
-		}
-		else if (deleteStep == totalDeleteStep) {
-			deleteStep += 1;
-			if (arrStates.size() <= deleteStep) {
-				arr.erase(arr.begin() + deleteIndex);
-				arrStates.push_back(arr);
-				arrSize = arr.size();
-			}
-			else {
-				arr = arrStates[deleteStep];
-				arrSize = arr.size();
-			}
-			codeBlock.setSelectedLine(-1);
-		}
-		clock.restart();
-	}
-	isPaused = true;
-}
-
-void SinglyLL::setCodeBlockInsert() {
-	switch (mode) {
-	case (InsertOption::INDEX):
-		if (insertStep < insertIndex - 1) {
-			codeBlock.setSelectedLine(1, 2);
-		}
-		else if (insertStep >= insertIndex - 1 && insertStep <= insertIndex) {
-			codeBlock.setSelectedLine(3);
-		}
-		else if (insertStep > insertIndex) {
-			codeBlock.setSelectedLine(insertStep - insertIndex + 3);
-		}
-		break;
-	case(InsertOption::HEAD):
-		codeBlock.setSelectedLine(insertStep);
-		break;
-	case(InsertOption::TAIL):
-		codeBlock.setSelectedLine(insertStep + 1);
-		break;
-	}
-}
-
-void SinglyLL::insertToArray() {
-	if (inserting) {
-		if (clock.getElapsedTime().asMilliseconds() >= insertStepTime && !isPaused) {
-			if (insertStep < totalInsertStep) {
-				// cout << insertStep << endl;
-				setCodeBlockInsert();
-				insertStep += 1;
-				clock.restart();
-				if(arrStates.size() <= insertStep)
-					arrStates.push_back(arr);
-
-			}
-			else if (insertStep == totalInsertStep) {
-				// inserting = false;
-				insertStep += 1;
-				if(mode == InsertOption::HEAD || mode == InsertOption::TAIL)
-					codeBlock.setSelectedLine(2);
-				if (arrStates.size() <= insertStep) {
-					arr.insert(arr.begin() + insertIndex, insertValue);
-					arrSize = arr.size();
-					arrStates.push_back(arr);
-				}
-				else {
-					arr = arrStates[insertStep];
-					arrSize = arr.size();
-				}
-			}
-
-		}
-	}
-}
-
-void SinglyLL::setCodeBlockSearch() {
-	if (searchStep == 0) {
-		codeBlock.setSelectedLine(1);
-		return;
-	}
-	if (searchStep < arrSize) {
-		if (arr[searchStep] != search_value)
-			codeBlock.setSelectedLine(2, 3);
-		else
-			codeBlock.setSelectedLine(6);
-	}
-	else 
-		codeBlock.setSelectedLine(5);
-	
-}
-
-void SinglyLL::search() {
-	if (searching) {
-		
-		if (clock.getElapsedTime().asMilliseconds() >= searchStepTime && !isPaused) {
-			if (searchStep < arrSize) {
-				if (arr[searchStep] != search_value) 
-					searchStep += 1;
-				else 
-					found = true;
-				clock.restart();
-			}
-			else 
-				codeBlock.setSelectedLine(5);
-		}
-
-		setCodeBlockSearch();
-	}
-}
-
-void SinglyLL::setCodeBlockDelete() {
-	if (mode == InsertOption::HEAD) {
-		if (deleteStep == 1)
-			codeBlock.setSelectedLine(2);
-		if (deleteStep == 2)
-			codeBlock.setSelectedLine(3);
-	}
-	else if (mode == InsertOption::TAIL || mode == InsertOption::INDEX) {
-		if (deleteStep < deleteIndex && deleteStep > 0) {
-			codeBlock.setSelectedLine(2, 3);
-		}
-		else if (deleteStep >= deleteIndex && deleteStep <= deleteIndex + 1)
-			codeBlock.setSelectedLine(5);
-		else if (deleteStep >= deleteIndex + 2)
-			codeBlock.setSelectedLine(6);
-	}
-}
-
-void SinglyLL::deleteAtIndex() {
-	if (deleting) {
-		if (clock.getElapsedTime().asMilliseconds() >= deleteStepTime && !isPaused) {
-			// cout << deleteStep << endl;
-			if (deleteStep < totalDeleteStep) {
-				deleteStep += 1;
-				if(arrStates.size() <= deleteStep)
-					arrStates.push_back(arr);
-				setCodeBlockDelete();
-			}
-			else if(deleteStep == totalDeleteStep) {
-				deleteStep += 1;
-				if (arrStates.size() <= deleteStep) {
-					arr.erase(arr.begin() + deleteIndex);
-					arrStates.push_back(arr);
-					arrSize = arr.size();
-				}
-				else {
-					arr = arrStates[deleteStep];
-					arrSize = arr.size();
-				}
-				codeBlock.setSelectedLine(-1);
-			}
-			clock.restart();
-		}
-	}
-}
-
+// -------------------------------- DISPLAY ------------------------------------- //
 void SinglyLL::displayControlOptions(int& option, RenderWindow& window, Event& event) {
 	__super::displayControlOptions(option, window, event);
 }
@@ -698,6 +617,17 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 				}
 			}
 
+			// Update Logic
+			if (updating) {
+				if (i == updateStep) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+				if (i == updateIndex && updateStep == i) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+			}
 			// Delete Logic
 			if (deleting) {
 				if (mode == InsertOption::INDEX || mode == InsertOption::TAIL) {
@@ -812,7 +742,10 @@ void SinglyLL::visualize(RenderWindow &window, Event &event) {
 					arrow.drawToV2(window, timeStep, false);
 			}
 			else if(searching) {
-				arrow.drawTo(window, timeStep, !inserting && (searching && searchStep == i && !found));
+				arrow.drawTo(window, timeStep, searchStep == i && !found && arr[i] != search_value);
+			}
+			else if (updating) {
+				arrow.drawTo(window, timeStep, updateStep == i && !updated && i != updateIndex);
 			}
 			else {
 				arrow.drawToV2(window, timeStep, false);
@@ -955,6 +888,7 @@ void SinglyLL::display(RenderWindow& window, Event& event, int& displayMode) {
 	visualize(window, event);
 	insertToArray();
 	search();
+	update();
 	drawCodeCells(window, event);
 	deleteAtIndex();
 }

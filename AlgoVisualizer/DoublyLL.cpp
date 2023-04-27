@@ -22,6 +22,7 @@ void DoublyLL::initVisualizing(int& option, int initializeOptions)
 	isVisualizing = true;
 	clock.restart();
 	stopSearching();
+	stopUpdating();
 	ifstream inputFile("file_io/input.txt");
 
 	switch (initializeOptions) {
@@ -55,6 +56,8 @@ void DoublyLL::initVisualizing(int& option, int initializeOptions)
 }
 
 void DoublyLL::startInserting(int index, int value) {
+	stopUpdating();
+
 	insertValue = value;
 	insertIndex = index;
 	if (index == arrSize) {
@@ -112,196 +115,9 @@ void DoublyLL::startInserting(int index, int value) {
 	insertStep = 0;
 }
 
-void DoublyLL::drawInsert(int& option) {
-	string windowTitle = "Insert To Array";
-
-	RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
-	vector<string> text = { "Head", "Tail", "Index:", "Value:" };
-	vector<Vector2f> positions = { {171,60}, {171,125}, {171,196}, {171,267} };
-	vector<Vector2f> textPositions = { {276,74}, {273,136}, {195,207}, {195,278} };
-	vector<RectangleShape> boxes;
-	vector<Text> allText;
-	boxes.resize(text.size());
-	allText.resize(text.size());
-
-	for (size_t i = 0; i < text.size(); i++)
-	{
-		boxes[i].setSize(Vector2f(257, 52));
-		boxes[i].setFillColor(Color(217, 217, 217));
-		boxes[i].setPosition(positions[i]);
-
-		allText[i].setString(text[i]);
-		allText[i].setFont(font);
-		allText[i].setCharacterSize(20);
-		allText[i].setPosition(textPositions[i]);
-		allText[i].setFillColor(Color::Black);
-	}
-
-	// Value Box
-	TextBox valueTextBox(18, Color::Black, false);
-	valueTextBox.setFont(font);
-	valueTextBox.setPosition(Vector2f(376, 281));
-	valueTextBox.setLimit(true, 1);
-
-	RectangleShape valueRect;
-	valueRect.setSize(Vector2f(45, 27));
-	valueRect.setFillColor(Color(217, 217, 217));
-	valueRect.setPosition(365, 280);
-
-	// Index Box
-	TextBox indexTextBox(18, Color::Black, false);
-	indexTextBox.setFont(font);
-	indexTextBox.setPosition(Vector2f(376, 210));
-	indexTextBox.setLimit(true, 1);
-
-	RectangleShape indexRect;
-	indexRect.setSize(Vector2f(45, 27));
-	indexRect.setFillColor(Color(217, 217, 217));
-	indexRect.setPosition(365, 209);
-
-	// Done Button
-	Texture doneTexture;
-	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-	Sprite doneButton;
-	doneButton.setTexture(doneTexture);
-	doneButton.setPosition(Vector2f(503, 346));
-
-	// Error Message
-	Text errorMessage;
-	errorMessage.setFont(font);
-	errorMessage.setFillColor(Color::Red);
-	errorMessage.setCharacterSize(15);
-	errorMessage.setPosition(Vector2f(171, 334));
-
-
-	int addOption = InsertOption::HEAD;
-
-	while (addWindow.isOpen()) {
-		Event aevent;
-		Vector2i mousePos = Mouse::getPosition(addWindow);
-
-		while (addWindow.pollEvent(aevent)) {
-			switch (aevent.type) {
-			case Event::Closed:
-				addWindow.close();
-				option = 0;
-				break;
-			case Event::TextEntered:
-				valueTextBox.typedOn(aevent);
-				indexTextBox.typedOn(aevent);
-				break;
-			case Event::MouseButtonPressed:
-				if (utils::isHover(boxes[3], mousePos)) {
-					valueTextBox.setSelected(true);
-					indexTextBox.setSelected(false);
-				}
-				else if (utils::isHover(boxes[2], mousePos)) {
-					valueTextBox.setSelected(false);
-					indexTextBox.setSelected(true);
-				}
-				else {
-					valueTextBox.setSelected(false);
-					indexTextBox.setSelected(false);
-				}
-
-				if (utils::isHover(doneButton, mousePos)) {
-					if (arrSize == 8) {
-						errorMessage.setString("The Max Array Size is 8");
-					}
-					else if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty() && addOption == InsertOption::INDEX) {
-						int index = stoi(indexTextBox.getText());
-						int value = stoi(valueTextBox.getText());
-
-						if (index >= arrSize || index < 0) {
-							//cout << errorMessage.getString().toAnsiString() << endl;
-							errorMessage.setString("Invalid index");
-						}
-						else {
-							startInserting(index, value);
-
-							clock.restart();
-
-							stopSearching();
-							stopDeleting();
-
-							addWindow.close();
-							option = 0;
-							isPaused = false;
-						}
-					}
-					else if (!valueTextBox.isEmpty()) {
-						mode = addOption;
-						insertValue = stoi(valueTextBox.getText());
-						if (mode == InsertOption::HEAD)
-							startInserting(0, insertValue);
-						else {
-							startInserting(arrSize, insertValue);
-						}
-
-						clock.restart();
-						stopSearching();
-						stopDeleting();
-
-						addWindow.close();
-						option = 0;
-
-					}
-					else {
-						errorMessage.setString("Value is Required!");
-					}
-				}
-				break;
-			default:
-				break;
-			}
-		}
-
-		addWindow.clear(Color(232, 232, 232));
-
-		for (int i = 0; i < text.size(); i++) {
-
-			if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1) {
-				boxes[i].setFillColor(Color::Black);
-				allText[i].setFillColor(Color::White);
-			}
-			else {
-				boxes[i].setFillColor(Color(217, 217, 217));
-				allText[i].setFillColor(Color::Black);
-				if (i == text.size() - 1)
-					boxes[i].setFillColor(Color(255, 153, 0));
-			}
-
-			if (aevent.type == Event::MouseButtonPressed) {
-				if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1)
-					addOption = i;
-			}
-
-			if (addOption == i)
-				boxes[i].setFillColor(Color(255, 153, 0));
-
-			addWindow.draw(boxes[i]);
-			addWindow.draw(allText[i]);
-		}
-
-		if (utils::isHover(doneButton, mousePos)) {
-			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
-			doneButton.setTexture(doneTexture);
-		}
-		else {
-			doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-			doneButton.setTexture(doneTexture);
-		}
-
-		addWindow.draw(doneButton);
-		addWindow.draw(indexRect); addWindow.draw(valueRect);
-		valueTextBox.drawTo(addWindow); indexTextBox.drawTo(addWindow);
-		addWindow.draw(errorMessage);
-
-		addWindow.display();
-	}
-}
-
 void DoublyLL::startSearching(int value) {
+	stopUpdating();
+
 	inserting = false;
 	search_value = value;
 	option = 0;
@@ -337,6 +153,8 @@ void DoublyLL::stopSearching() {
 }
 
 void DoublyLL::startDeleting(int index) {
+	stopUpdating();
+
 	inserting = false;
 	deleteIndex = index;
 	option = 0;
@@ -414,6 +232,10 @@ void DoublyLL::previousStep() {
 		searchStep = max(searchStep - 1, 0);
 		setCodeBlockSearch();
 	}
+	else if (updating) {
+		updateStep = max(updateStep - 1, 0);
+		setCodeBlockUpdate();
+	}
 	else if (inserting) {
 		insertStep = max(insertStep - 1, 0);
 		setCodeBlockInsert();
@@ -435,6 +257,11 @@ void DoublyLL::nextStep() {
 		if (search_value != arr[searchStep])
 			searchStep += 1;
 		setCodeBlockSearch();
+	}
+	else if (updating) {
+		if (updateStep != updateIndex)
+			updateStep += 1;
+		setCodeBlockUpdate();
 	}
 	else if (inserting) {
 		if (insertStep < totalInsertStep) {
@@ -629,6 +456,89 @@ void DoublyLL::deleteAtIndex() {
 	}
 }
 
+void DoublyLL::startUpdating(int value, int index) {
+	updateIndex = index;
+	updateValue = value;
+	option = 0;
+	updated = false;
+	updateStep = 0;
+	updating = true;
+
+	codeBlock.setIsOpen(true);
+	codeBlock.codelines[0] = "if empty, return";
+	codeBlock.codelines[1] = "temp = head";
+	codeBlock.codelines[2] = "for (k = 0; k < i-1; k++)";
+	codeBlock.codelines[3] = "  temp = temp.next";
+	codeBlock.codelines[4] = "  if temp == null";
+	codeBlock.codelines[5] = "    return ";
+	codeBlock.codelines[6] = "temp.val = v";
+
+
+	if (arrSize == 0) {
+		codeBlock.setSelectedLine(0);
+		stopUpdating();
+	}
+	else {
+		codeBlock.setSelectedLine(1);
+	}
+	// Array related
+	arrStates.clear();
+	// arrStates.push_back(arr);
+	clock.restart();
+}
+
+void DoublyLL::stopUpdating() {
+	updating = false;
+	updated = false;
+	updateStep = 0;
+	isPaused = false;
+}
+
+void DoublyLL::setCodeBlockUpdate() {
+	if (updateStep == 0) {
+		codeBlock.setSelectedLine(1);
+		return;
+	}
+	if (updateStep < arrSize) {
+		if (updateStep != updateIndex)
+			codeBlock.setSelectedLine(2, 3);
+		else
+			codeBlock.setSelectedLine(6);
+	}
+	else
+		codeBlock.setSelectedLine(5);
+}
+
+void DoublyLL::update() {
+	if (updating) {
+		if (clock.getElapsedTime().asMilliseconds() >= updateTimeStep && !isPaused) {
+			if (updateStep < arrSize) {
+				if (updateStep < updateIndex) {
+					updateStep += 1;
+					if (arrStates.size() <= updateStep)
+						arrStates.push_back(arr);
+				}
+				else {
+					if (arrStates.size() <= updateStep) {
+						arr[updateIndex] = updateValue;
+						arrStates.push_back(arr);
+						arrSize = arr.size();
+					}
+					else {
+						arr = arrStates[updateStep];
+						arrSize = arr.size();
+					}
+					updated = true;
+				}
+				clock.restart();
+			}
+			else
+				codeBlock.setSelectedLine(5);
+		}
+		setCodeBlockUpdate();
+	}
+}
+
 void DoublyLL::displayControlOptions(int& option, RenderWindow& window, Event& event) {
 	__super::displayControlOptions(option, window, event);
 }
@@ -699,6 +609,18 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 					allLLBlocks[i].setTexture(textureLL);
 				}
 				if (arr[i] == search_value && searchStep == i) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+			}
+			
+			// Update Logic
+			if (updating) {
+				if (i == updateStep) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+				if (i == updateIndex && updateStep == i) {
 					textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
 					allLLBlocks[i].setTexture(textureLL);
 				}
@@ -861,9 +783,13 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 				}
 			}
 			else if (searching) {
-				arrow1.drawTo(window, timeStep, (searchStep == i && !found));
-				arrow2.drawTo(window, timeStep, false);
+				arrow1.drawToV2(window, timeStep, (searchStep == i && !found && arr[i] != search_value));
+				arrow2.drawToV2(window, timeStep, false);
 
+			}
+			else if (updating) {
+				arrow1.drawToV2(window, timeStep, (updateStep == i && !updated && i != updateIndex));
+				arrow2.drawToV2(window, timeStep, false);
 			}
 			else {
 				arrow1.drawToV2(window, timeStep, false);
@@ -1053,6 +979,7 @@ void DoublyLL::display(RenderWindow& window, Event& event, int& displayMode) {
 	visualize(window, event);
 	insertToArray();
 	search();
+	update();
 	drawCodeCells(window, event);
 	deleteAtIndex();
 }

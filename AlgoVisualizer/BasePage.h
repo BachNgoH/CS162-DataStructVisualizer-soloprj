@@ -3,11 +3,13 @@
 #include "SFML/Window.hpp"
 #include "TextBox.h"
 #include <stack>
+#include "InsertOptions.h"
 using namespace sf;
 using namespace std;
 
 class BasePage {
 public:
+	int maxArrSize = 10;
 
 	string bgPath;
 	vector<int> arr;
@@ -42,8 +44,10 @@ public:
 	virtual void stopDeleting();
 	virtual void initVisualizing(int& option, int initializeOptions);
 	
-	virtual void startUpdating(int index, int value);
+	virtual void startUpdating(int value, int index);
 	virtual void stopUpdating();
+
+	virtual void startInserting(int value, int index);
 
 	virtual void drawInsert(int& option);
 	virtual void drawUpdate(int& option);

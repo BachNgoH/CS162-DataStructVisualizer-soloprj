@@ -81,6 +81,18 @@ void CircularLL::visualize(RenderWindow& window, Event& event) {
 				}
 			}
 
+			// Update Logic
+			if (updating) {
+				if (i == updateStep) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-search.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+				if (i == updateIndex && updateStep == i) {
+					textureLL.loadFromFile("resources/blocks/LinkedList-found.png");
+					allLLBlocks[i].setTexture(textureLL);
+				}
+			}
+
 			// Delete Logic
 			if (deleting) {
 				if (mode == InsertOption::INDEX || mode == InsertOption::TAIL) {

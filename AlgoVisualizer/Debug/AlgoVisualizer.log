@@ -1,8 +1,63 @@
-﻿  BasePage.cpp
+﻿  StaticArray.cpp
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(37,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(80,22): warning C4018: '<': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(106,30): warning C4018: '<=': signed/unsigned mismatch
 C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\TextBox.h(109,35): warning C4018: '>': signed/unsigned mismatch
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\BasePage.cpp(757,35): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
-C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\BasePage.cpp(763,39): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(25,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(35,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(81,87): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(82,88): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(83,71): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(86,86): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(87,87): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(88,72): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(108,31): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\CodeCell.h(119,33): warning C4244: 'argument': conversion from 'size_t' to 'float', possible loss of data
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(68,35): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(92,45): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(94,36): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(146,18): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(151,25): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(157,25): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(197,35): warning C4018: '<': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(200,22): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(208,19): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(210,26): warning C4018: '<=': signed/unsigned mismatch
+C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\AlgoVisualizer\StaticArray.cpp(216,26): warning C4018: '<': signed/unsigned mismatch
   AlgoVisualizer.vcxproj -> C:\Users\LENOVO\studying\Year1\cs162\AlgoVisualizer\Debug\AlgoVisualizer.exe

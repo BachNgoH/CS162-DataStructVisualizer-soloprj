@@ -8,7 +8,7 @@
 Queue::Queue() {
 	bgPath = "resources/Queue-Background.png";
 	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
-	controlOptions = { "Initialize", "Enqueue", "Dequeue", "Peak" };
+	controlOptions = { "Initialize", "Enqueue", "Dequeue", "Peak", "Clear"};
 
 }
 
@@ -201,6 +201,11 @@ void Queue::displayControlOptions(int& option, RenderWindow& window, Event& even
 			searchStep = 0;
 			codeBlock.setSelectedLine(1);
 		}
+	}
+	// Clear
+	else if (option == 5) {
+		arr.clear();
+		arrSize = 0;
 	}
 }
 

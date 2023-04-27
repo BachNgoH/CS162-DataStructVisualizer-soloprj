@@ -50,7 +50,6 @@ public:
 
 	void insertToArray();
 	void initVisualizing(int& option, int initializeOptions) override;
-	void drawInsert(int& option);
 	void search();
 	void deleteAtIndex();
 	void drawCodeCells(RenderWindow& window, Event& event);

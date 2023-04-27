@@ -34,25 +34,37 @@ public:
 	int totalDeleteStep = 0;
 	CodeCell codeBlock;
 
+	// Update Attributes
+	bool updating = false;
+	int updateIndex;
+	int updateValue;
+	float updateTimeStep = 1000.f;
+	bool updated = false;
+	int updateStep = 0;
+
+
 	void startSearching(int value);
 	void stopSearching();
 	void startDeleting(int index);
 	void stopDeleting();
 	void startInserting(int index, int value);
+	void startUpdating(int value, int index);
+	void stopUpdating();
 
 	void previousStep();
 	void nextStep();
 
 	void insertToArray();
 	void initVisualizing(int& option, int initializeOptions) override;
-	void drawInsert(int& option);
 	void search();
+	void update();
 	void deleteAtIndex();
 	void drawCodeCells(RenderWindow& window, Event& event);
 
 	void setCodeBlockDelete();
 	void setCodeBlockInsert();
 	void setCodeBlockSearch();
+	void setCodeBlockUpdate();
 
 	virtual void visualize(RenderWindow& window, Event& event);
 	virtual void displayControlOptions(int& option, RenderWindow& window, Event& event);

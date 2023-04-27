@@ -18,52 +18,71 @@ void BasePage::initVisualizing(int &option, int initializeOptions) {
 	option = 0;
 }
 
+void BasePage::startInserting(int index, int value) {}
+
 void BasePage::drawInsert(int &option) {
-	string windowTitle;
-	if (option == 2)
-		windowTitle = "Add To Array";
-	else
-		windowTitle = "Update Array";
+	string windowTitle = "Insert To Array";
 
 	RenderWindow addWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
-	Font font;
-	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
+	vector<string> text = { "Head", "Tail", "Index:", "Value:" };
+	vector<Vector2f> positions = { {171,60}, {171,125}, {171,196}, {171,267} };
+	vector<Vector2f> textPositions = { {276,74}, {273,136}, {195,207}, {195,278} };
+	vector<RectangleShape> boxes;
+	vector<Text> allText;
+	boxes.resize(text.size());
+	allText.resize(text.size());
 
-	TextBox valueTextBox(18, Color::White, false);
+	for (size_t i = 0; i < text.size(); i++)
+	{
+		boxes[i].setSize(Vector2f(257, 52));
+		boxes[i].setFillColor(Color(217, 217, 217));
+		boxes[i].setPosition(positions[i]);
+
+		allText[i].setString(text[i]);
+		allText[i].setFont(font);
+		allText[i].setCharacterSize(20);
+		allText[i].setPosition(textPositions[i]);
+		allText[i].setFillColor(Color::Black);
+	}
+
+	// Value Box
+	TextBox valueTextBox(18, Color::Black, false);
 	valueTextBox.setFont(font);
-	valueTextBox.setPosition(Vector2f(376, 106));
+	valueTextBox.setPosition(Vector2f(376, 281));
 	valueTextBox.setLimit(true, 1);
-	//sizeTextBox.setString(std::to_string(arrSize));
 
-	Texture vboxTexture;
-	vboxTexture.loadFromFile("resources/blocks/ValueBox.png");
-	Sprite valueBox;
-	valueBox.setTexture(vboxTexture);
-	valueBox.setPosition(Vector2f(171, 92));
+	RectangleShape valueRect;
+	valueRect.setSize(Vector2f(45, 27));
+	valueRect.setFillColor(Color(217, 217, 217));
+	valueRect.setPosition(365, 280);
 
-	TextBox indexTextBox(18, Color::White, false);
+	// Index Box
+	TextBox indexTextBox(18, Color::Black, false);
 	indexTextBox.setFont(font);
-	indexTextBox.setPosition(Vector2f(376, 215));
+	indexTextBox.setPosition(Vector2f(376, 210));
 	indexTextBox.setLimit(true, 1);
 
-	Texture iboxTexture;
-	iboxTexture.loadFromFile("resources/blocks/IndexBox.png");
-	Sprite indexBox;
-	indexBox.setTexture(iboxTexture);
-	indexBox.setPosition(Vector2f(171, 200));
+	RectangleShape indexRect;
+	indexRect.setSize(Vector2f(45, 27));
+	indexRect.setFillColor(Color(217, 217, 217));
+	indexRect.setPosition(365, 209);
 
+	// Done Button
 	Texture doneTexture;
 	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-
 	Sprite doneButton;
 	doneButton.setTexture(doneTexture);
 	doneButton.setPosition(Vector2f(503, 346));
 
+	// Error Message
 	Text errorMessage;
 	errorMessage.setFont(font);
 	errorMessage.setFillColor(Color::Red);
 	errorMessage.setCharacterSize(15);
-	errorMessage.setPosition(Vector2f(171, 276));
+	errorMessage.setPosition(Vector2f(171, 334));
+
+
+	int addOption = InsertOption::HEAD;
 
 	while (addWindow.isOpen()) {
 		Event aevent;
@@ -80,11 +99,11 @@ void BasePage::drawInsert(int &option) {
 				indexTextBox.typedOn(aevent);
 				break;
 			case Event::MouseButtonPressed:
-				if (utils::isHover(valueBox, mousePos)) {
+				if (utils::isHover(boxes[3], mousePos)) {
 					valueTextBox.setSelected(true);
 					indexTextBox.setSelected(false);
 				}
-				else if (utils::isHover(indexBox, mousePos)) {
+				else if (utils::isHover(boxes[2], mousePos)) {
 					valueTextBox.setSelected(false);
 					indexTextBox.setSelected(true);
 				}
@@ -94,8 +113,10 @@ void BasePage::drawInsert(int &option) {
 				}
 
 				if (utils::isHover(doneButton, mousePos)) {
-
-					if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty()) {
+					if (arrSize >= maxArrSize) {
+						errorMessage.setString("The Max Array Size is " + to_string(maxArrSize));
+					}
+					else if (!valueTextBox.isEmpty() && !indexTextBox.isEmpty() && addOption == InsertOption::INDEX) {
 						int index = stoi(indexTextBox.getText());
 						int value = stoi(valueTextBox.getText());
 
@@ -104,13 +125,36 @@ void BasePage::drawInsert(int &option) {
 							errorMessage.setString("Invalid index");
 						}
 						else {
-							arr[index] = value;
+							startInserting(index, value);
+
+							clock.restart();
+
+							stopSearching();
+							stopDeleting();
+
 							addWindow.close();
 							option = 0;
+							isPaused = false;
 						}
 					}
+					else if (!valueTextBox.isEmpty()) {
+						int insertValue = stoi(valueTextBox.getText());
+						if (addOption == InsertOption::HEAD)
+							startInserting(0, insertValue);
+						else {
+							startInserting(arrSize, insertValue);
+						}
+
+						clock.restart();
+						stopSearching();
+						stopDeleting();
+
+						addWindow.close();
+						option = 0;
+
+					}
 					else {
-						errorMessage.setString("Value and Index are Required!");
+						errorMessage.setString("Value is Required!");
 					}
 				}
 				break;
@@ -120,6 +164,31 @@ void BasePage::drawInsert(int &option) {
 		}
 
 		addWindow.clear(Color(232, 232, 232));
+
+		for (int i = 0; i < text.size(); i++) {
+
+			if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1) {
+				boxes[i].setFillColor(Color::Black);
+				allText[i].setFillColor(Color::White);
+			}
+			else {
+				boxes[i].setFillColor(Color(217, 217, 217));
+				allText[i].setFillColor(Color::Black);
+				if (i == text.size() - 1)
+					boxes[i].setFillColor(Color(255, 153, 0));
+			}
+
+			if (aevent.type == Event::MouseButtonPressed) {
+				if (utils::isHover(boxes[i], mousePos) && i != text.size() - 1)
+					addOption = i;
+			}
+
+			if (addOption == i)
+				boxes[i].setFillColor(Color(255, 153, 0));
+
+			addWindow.draw(boxes[i]);
+			addWindow.draw(allText[i]);
+		}
 
 		if (utils::isHover(doneButton, mousePos)) {
 			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
@@ -131,10 +200,8 @@ void BasePage::drawInsert(int &option) {
 		}
 
 		addWindow.draw(doneButton);
-		addWindow.draw(valueBox);
-		addWindow.draw(indexBox);
-		valueTextBox.drawTo(addWindow);
-		indexTextBox.drawTo(addWindow);
+		addWindow.draw(indexRect); addWindow.draw(valueRect);
+		valueTextBox.drawTo(addWindow); indexTextBox.drawTo(addWindow);
 		addWindow.draw(errorMessage);
 
 		addWindow.display();

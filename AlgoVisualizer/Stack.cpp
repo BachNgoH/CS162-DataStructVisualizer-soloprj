@@ -8,7 +8,7 @@
 Stack::Stack() {
 	bgPath = "resources/Stack-Background.png";
 	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
-	controlOptions = { "Initialize", "Push", "Pop", "Peak"};
+	controlOptions = { "Initialize", "Push", "Pop", "Peak", "Clear"};
 }
 
 void Stack::startPushing(int value) {
@@ -200,6 +200,16 @@ void Stack::displayControlOptions(int& option, RenderWindow& window, Event& even
 			searchStep = 0;
 			codeBlock.setSelectedLine(1);
 		}
+	}
+	// Clear
+	else if (option == 5) {
+		stopDeleting();
+		inserting = false;
+		stopSearching();
+		stopUpdating();
+		arrStates.clear();
+		arr.clear();
+		arrSize = 0;
 	}
 }
 
