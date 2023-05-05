@@ -172,12 +172,13 @@ void HomeScreen::display(RenderWindow& window, Event &event, int &displayMode) {
 
 	drawBackground(window);
 	
+	// Draw Cards
 	vector<Sprite> buttons = getButtons(window, event, viewOption);
 
 	vector<Sprite> cards = drawCards(window, event, viewOption);
+	Vector2i mousePos = Mouse::getPosition(window);
 
 	if (event.type == Event::MouseButtonPressed) {
-		Vector2i mousePos = Mouse::getPosition(window);
 
 		for (size_t i = 0; i < buttons.size(); i++) {
 			Sprite button = buttons[i];
@@ -211,7 +212,37 @@ void HomeScreen::display(RenderWindow& window, Event &event, int &displayMode) {
 				displayMode = i + 1;
 			}
 		}
+
+
 	}
+
+	// Setting button
+	Texture settingTexture;
+	settingTexture.loadFromFile("resources/buttons/SettingButton.png");
+	Sprite settingButton;
+	settingButton.setPosition(1336, 8);
+	settingButton.setTexture(settingTexture);
+
+	Cursor cursor;
+	cursor.loadFromSystem(Cursor::Hand);
+	if (utils::isHover(settingButton, mousePos)) 
+		window.setMouseCursor(cursor);
+	else {
+		cursor.loadFromSystem(Cursor::Arrow);
+		window.setMouseCursor(cursor);
+	}
+	settingButton.setTexture(settingTexture);
+
+	if (event.type == Event::MouseButtonPressed) {
+		if (utils::isHover(settingButton, mousePos)) {
+			displayMode = 8;
+			cursor.loadFromSystem(Cursor::Arrow);
+			window.setMouseCursor(cursor);
+
+		}
+	}
+
+	window.draw(settingButton);
 }
 
 

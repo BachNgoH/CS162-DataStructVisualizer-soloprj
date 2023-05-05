@@ -42,7 +42,12 @@ void StaticArray::visualize(RenderWindow& window, Event& event) {
 	
 	if (isVisualizing && arrSize > 0) {
 		Texture pointerTexture;
-		pointerTexture.loadFromFile("resources/blocks/StartPointer.png");
+		if(palleteCode == 1)
+			pointerTexture.loadFromFile("resources/blocks/StartPointer-vintage.png");
+		else if(palleteCode == 2)
+			pointerTexture.loadFromFile("resources/blocks/StartPointer-warm.png");
+		else
+			pointerTexture.loadFromFile("resources/blocks/StartPointer.png");
 
 		Sprite pointer;
 		pointer.setTexture(pointerTexture);
@@ -51,16 +56,30 @@ void StaticArray::visualize(RenderWindow& window, Event& event) {
 
 		for (int i = 0; i < arrSize; i++) {
 			Texture blockTexture;
-			blockTexture.loadFromFile("resources/blocks/Block-Value.png");
-			if(arr[i] == 1000)
-				blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
+			if(palleteCode == 1)
+				blockTexture.loadFromFile("resources/blocks/Block-Value-vintage.png");
+			else if(palleteCode == 2)
+				blockTexture.loadFromFile("resources/blocks/Block-Value-warm.png");
+			else
+				blockTexture.loadFromFile("resources/blocks/Block-Value.png");
 
-			if ((searching && searchStep == i) || (deleting && deleteStep == i)) 
-				blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+			if (arr[i] == 1000) {
+				if (palleteCode == 1)
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue-vintage.png");
+				else if (palleteCode == 2)
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue-warm.png");
+				else
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
+			}
 
-			if(inserting && i == arr.size() - insertStep + 1)
-				blockTexture.loadFromFile("resources/blocks/Block-Search.png");
-
+			if ((searching && searchStep == i) || (deleting && deleteStep == i) || (inserting && i == arr.size() - insertStep + 1)) {
+				if (palleteCode == 1)
+					blockTexture.loadFromFile("resources/blocks/Block-Search-vintage.png");
+				else if (palleteCode == 2)
+					blockTexture.loadFromFile("resources/blocks/Block-Search-warm.png");
+				else
+					blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+			}
 			Sprite block;
 			block.setTexture(blockTexture);
 
@@ -236,7 +255,7 @@ void StaticArray::insertToArray() {
 }
 
 void StaticArray::drawCodeCells(RenderWindow& window, Event& event) {
-
+	codeBlock.bgColor = pallete[2];
 	codeBlock.drawTo(window, event);
 }
 

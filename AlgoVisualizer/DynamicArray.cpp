@@ -377,7 +377,12 @@ void DynamicArray::displayControlOptions(int& option, RenderWindow& window, Even
 void DynamicArray::visualize(RenderWindow& window, Event& event) {
 	if (isVisualizing && arrSize > 0) {
 		Texture pointerTexture;
-		pointerTexture.loadFromFile("resources/blocks/StartPointer.png");
+		if(palleteCode == 1)
+			pointerTexture.loadFromFile("resources/blocks/StartPointer-vintage.png");
+		else if (palleteCode == 2)
+			pointerTexture.loadFromFile("resources/blocks/StartPointer-warm.png");
+		else
+			pointerTexture.loadFromFile("resources/blocks/StartPointer.png");
 		Sprite pointer;
 		pointer.setTexture(pointerTexture);
 		pointer.setPosition(Vector2f(130, 284));
@@ -390,11 +395,29 @@ void DynamicArray::visualize(RenderWindow& window, Event& event) {
 		for (int i = 0; i < arrSize && showMain; i++) {
 
 			Texture blockTexture;
-			blockTexture.loadFromFile("resources/blocks/Block-Value.png");
-			if (arr[i] == 1000)
-				blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
-			if ((searching && searchStep == i) || (updating && updateIndex == i))
-				blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+			if (palleteCode == 1)
+				blockTexture.loadFromFile("resources/blocks/Block-Value-vintage.png");
+			else if (palleteCode == 2)
+				blockTexture.loadFromFile("resources/blocks/Block-Value-warm.png");
+			else
+				blockTexture.loadFromFile("resources/blocks/Block-Value.png");
+
+			if (arr[i] == 1000) {
+				if (palleteCode == 1)
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue-vintage.png");
+				else if (palleteCode == 2)
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue-warm.png");
+				else
+					blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
+			}
+			if ((searching && searchStep == i) || (updating && updateIndex == i)) {
+				if (palleteCode == 1)
+					blockTexture.loadFromFile("resources/blocks/Block-Search-vintage.png");
+				else if (palleteCode == 2)
+					blockTexture.loadFromFile("resources/blocks/Block-Search-warm.png");
+				else
+					blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+			}
 
 			Sprite block;
 			block.setTexture(blockTexture);
@@ -435,12 +458,29 @@ void DynamicArray::visualize(RenderWindow& window, Event& event) {
 			for (int i = 0; i <= arrSize; i++) {
 				
 				Texture blockTexture;
-				blockTexture.loadFromFile("resources/blocks/Block-Value.png");
-				if (i - 1 >= 0 && arr[i - 1] == 1000)
-					blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
-				if (i == insertStep)
-					blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+				if (palleteCode == 1)
+					blockTexture.loadFromFile("resources/blocks/Block-Value-vintage.png");
+				else if (palleteCode == 2)
+					blockTexture.loadFromFile("resources/blocks/Block-Value-warm.png");
+				else
+					blockTexture.loadFromFile("resources/blocks/Block-Value.png");
 
+				if (i - 1 >= 0 && arr[i - 1] == 1000) {
+					if (palleteCode == 1)
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue-vintage.png");
+					else if (palleteCode == 2)
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue-warm.png");
+					else
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
+				}
+				if (i == insertStep) {
+					if (palleteCode == 1)
+						blockTexture.loadFromFile("resources/blocks/Block-Search-vintage.png");
+					else if (palleteCode == 2)
+						blockTexture.loadFromFile("resources/blocks/Block-Search-warm.png");
+					else
+						blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+				}
 				Sprite block;
 				block.setTexture(blockTexture);
 				block.setPosition(Vector2f(262 + i * 105, 379));
@@ -495,10 +535,22 @@ void DynamicArray::visualize(RenderWindow& window, Event& event) {
 
 				Texture blockTexture;
 				blockTexture.loadFromFile("resources/blocks/Block-Value.png");
-				if (i - 1 >= 0 && arr[i - 1] == 1000)
-					blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
-				if (i == deleteStep)
-					blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+				if (i - 1 >= 0 && arr[i - 1] == 1000) {
+					if (palleteCode == 1)
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue-vintage.png");
+					else if (palleteCode == 2)
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue-warm.png");
+					else
+						blockTexture.loadFromFile("resources/blocks/Block-NoValue.png");
+				}
+				if (i == deleteStep) {
+					if (palleteCode == 1)
+						blockTexture.loadFromFile("resources/blocks/Block-Search-vintage.png");
+					else if (palleteCode == 2)
+						blockTexture.loadFromFile("resources/blocks/Block-Search-warm.png");
+					else
+						blockTexture.loadFromFile("resources/blocks/Block-Search.png");
+				}
 
 				Sprite block;
 				block.setTexture(blockTexture);
@@ -553,7 +605,7 @@ void DynamicArray::visualize(RenderWindow& window, Event& event) {
 }
 
 void DynamicArray::drawCodeCells(RenderWindow& window, Event& event) {
-
+	codeBlock.bgColor = pallete[2];
 	codeBlock.drawTo(window, event);
 }
 

@@ -146,18 +146,17 @@ void Stack::drawPop(int& option) {
 	mode = InsertOption::HEAD;
 	totalDeleteStep = 2;
 
-
-	if (arrSize == 0) {
-		codeBlock.setSelectedLine(0);
-		stopDeleting();
-	}
-
 	// Array related
 	arrStates.clear();
 	arrStates.push_back(arr);
 	
 	deleting = true;
 	deleteStep = 0;
+
+	if (arr.size() == 0) {
+		codeBlock.setSelectedLine(0);
+		stopDeleting();
+	}
 
 	option = 0;
 }

@@ -552,8 +552,12 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 		for (int i = 0; i < arr.size(); i++) {
 
 			Texture textureLL;
-			textureLL.loadFromFile("resources/blocks/LinkedList.png");
-			allLLBlocks[i].setTexture(textureLL);
+			if (palleteCode == 1)
+				textureLL.loadFromFile("resources/blocks/LinkedList-vintage.png");
+			else if (palleteCode == 2)
+				textureLL.loadFromFile("resources/blocks/LinkedList-warm.png");
+			else
+				textureLL.loadFromFile("resources/blocks/LinkedList.png");			allLLBlocks[i].setTexture(textureLL);
 			allLLBlocks[i].setPosition(Vector2f(127 + 160 * i, 250));
 
 			Text value;
@@ -803,8 +807,12 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 			case InsertOption::HEAD:
 				if (insertStep >= 1 && insertStep <= totalInsertStep) {
 					Texture textureLL;
-					textureLL.loadFromFile("resources/blocks/LinkedList.png");
-					Sprite llBlock;
+					if (palleteCode == 1)
+						textureLL.loadFromFile("resources/blocks/LinkedList-vintage.png");
+					else if (palleteCode == 2)
+						textureLL.loadFromFile("resources/blocks/LinkedList-warm.png");
+					else
+						textureLL.loadFromFile("resources/blocks/LinkedList.png");					Sprite llBlock;
 					llBlock.setTexture(textureLL);
 					llBlock.setPosition(Vector2f(127 + 160 * insertIndex, 250));
 
@@ -840,7 +848,12 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 			case InsertOption::TAIL:
 				if (insertStep >= 0 && insertStep <= totalInsertStep) {
 					Texture textureLL;
-					textureLL.loadFromFile("resources/blocks/LinkedList.png");
+					if (palleteCode == 1)
+						textureLL.loadFromFile("resources/blocks/LinkedList-vintage.png");
+					else if (palleteCode == 2)
+						textureLL.loadFromFile("resources/blocks/LinkedList-warm.png");
+					else
+						textureLL.loadFromFile("resources/blocks/LinkedList.png");
 					Sprite llBlock;
 					llBlock.setTexture(textureLL);
 					llBlock.setPosition(Vector2f(127 + 160 * arrSize, 250));
@@ -878,7 +891,12 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 				if (insertStep >= insertIndex + 2 && insertStep <= totalInsertStep) {
 					// Block
 					Texture addedLLTexture;
-					addedLLTexture.loadFromFile("resources/blocks/LinkedList.png");
+					if (palleteCode == 1)
+						addedLLTexture.loadFromFile("resources/blocks/LinkedList-vintage.png");
+					else if (palleteCode == 2)
+						addedLLTexture.loadFromFile("resources/blocks/LinkedList-warm.png");
+					else
+						addedLLTexture.loadFromFile("resources/blocks/LinkedList.png");
 					Sprite addedLLBlock;
 					addedLLBlock.setTexture(addedLLTexture);
 					addedLLBlock.setPosition(Vector2f(127 + 160 * insertIndex, 250));
@@ -970,7 +988,7 @@ void DoublyLL::visualize(RenderWindow& window, Event& event) {
 }
 
 void DoublyLL::drawCodeCells(RenderWindow& window, Event& event) {
-
+	codeBlock.bgColor = pallete[2];
 	codeBlock.drawTo(window, event);
 }
 

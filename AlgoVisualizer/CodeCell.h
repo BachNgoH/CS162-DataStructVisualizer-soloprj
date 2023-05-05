@@ -8,7 +8,6 @@ using namespace std;
 
 class CodeCell {
 private:
-	Color bgColor = Color(90, 184, 208);
 	Color codeColor = Color::White;
 	int selectedLine = -1;
 	int selectedLine2 = -1;
@@ -18,6 +17,7 @@ private:
 
 public:
 	vector<string> codelines;
+	Color bgColor = Color(90, 184, 208);
 
 	CodeCell() {
 		vector<string> codelines;

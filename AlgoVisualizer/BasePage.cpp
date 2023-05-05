@@ -175,7 +175,7 @@ void BasePage::drawInsert(int &option) {
 				boxes[i].setFillColor(Color(217, 217, 217));
 				allText[i].setFillColor(Color::Black);
 				if (i == text.size() - 1)
-					boxes[i].setFillColor(Color(255, 153, 0));
+					boxes[i].setFillColor(pallete[1]);
 			}
 
 			if (aevent.type == Event::MouseButtonPressed) {
@@ -184,7 +184,7 @@ void BasePage::drawInsert(int &option) {
 			}
 
 			if (addOption == i)
-				boxes[i].setFillColor(Color(255, 153, 0));
+				boxes[i].setFillColor(pallete[1]);
 
 			addWindow.draw(boxes[i]);
 			addWindow.draw(allText[i]);
@@ -370,7 +370,7 @@ void BasePage::displayCreateOpts(RenderWindow& window, Event& event, TextBox& si
 		}
 
 		if (intializeOpt == i || (i == options.size() - 1 && includeSize))
-			box.setFillColor(Color(255, 153, 0));
+			box.setFillColor(pallete[1]);
 
 		if (event.type == Event::MouseButtonPressed) {
 			if (utils::isHover(box, mousePos) && (i != options.size() - 1 || !includeSize)) {
@@ -743,7 +743,7 @@ void BasePage::drawPlayerControls(RenderWindow& window, Event& event) {
 
 	RectangleShape bgRect;
 	bgRect.setSize(Vector2f(410, 73));
-	bgRect.setFillColor(Color(22, 185, 132));
+	bgRect.setFillColor(pallete[3]);
 	bgRect.setPosition(436, 846);
 	Vector2i mousePos = Mouse::getPosition(window);
 
@@ -825,7 +825,7 @@ void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMo
 		controls[i].setCharacterSize(20);
 		controls[i].setFillColor(Color::White);
 
-		controlRects[i].setFillColor(Color(255, 153, 0));
+		controlRects[i].setFillColor(pallete[1]);
 		controlRects[i].setSize(Vector2f(334.f, 39.f));
 		controlRects[i].setPosition(23, 728 + i * 39);
 
@@ -843,7 +843,7 @@ void BasePage::drawPageLayout(RenderWindow& window, Event& event, int &displayMo
 		Cursor cursor;
 		if (cursor.loadFromSystem(sf::Cursor::Hand))
 			window.setMouseCursor(cursor);
-		back.setFillColor(Color(255, 153, 0));
+		back.setFillColor(pallete[1]);
 
 	}
 	else {

@@ -26,6 +26,8 @@ public:
 	
 	bool isPaused = false;
 	int clickDelay = 0;
+	vector<Color> pallete;
+	int palleteCode;
 
 	BasePage();
 	~BasePage();

@@ -147,6 +147,7 @@
     <ClCompile Include="HomeScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Queue.cpp" />
+    <ClCompile Include="SettingsScreen.cpp" />
     <ClCompile Include="SinglyLL.cpp" />
     <ClCompile Include="Stack.cpp" />
     <ClCompile Include="StaticArray.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="HomeScreen.h" />
     <ClInclude Include="InsertOptions.h" />
     <ClInclude Include="Queue.h" />
+    <ClInclude Include="SettingsScreen.h" />
     <ClInclude Include="SinglyLL.h" />
     <ClInclude Include="Stack.h" />
     <ClInclude Include="StaticArray.h" />
