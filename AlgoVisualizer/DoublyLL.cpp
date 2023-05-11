@@ -463,6 +463,7 @@ void DoublyLL::startUpdating(int value, int index) {
 	updated = false;
 	updateStep = 0;
 	updating = true;
+	inserting = false;
 
 	codeBlock.setIsOpen(true);
 	codeBlock.codelines[0] = "if empty, return";

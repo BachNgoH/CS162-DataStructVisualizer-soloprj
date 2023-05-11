@@ -30,7 +30,6 @@ class HomeScreen {
 		~HomeScreen();
 
 		void display(RenderWindow &window, Event &event, int &displayMode);
-		void calcHomeView(RenderWindow &window);
 
 };
 

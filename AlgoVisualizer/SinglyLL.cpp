@@ -472,6 +472,7 @@ void SinglyLL::deleteAtIndex() {
 void SinglyLL::startDeleting(int index) {
 	stopUpdating();
 	deleteIndex = index;
+	inserting = false;
 	option = 0;
 	if (deleteIndex == 0) {
 		codeBlock.setIsOpen(true);

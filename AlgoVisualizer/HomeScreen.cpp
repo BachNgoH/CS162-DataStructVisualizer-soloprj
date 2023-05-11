@@ -37,16 +37,6 @@ HomeScreen::HomeScreen(string bgPath, vector<string> cardPaths,
 
 }
 
-void HomeScreen::calcHomeView(RenderWindow& window) {
-	int xSize = window.getSize().x;
-	int ySize = window.getSize().y;
-
-	float xFloat = (float)xSize / window.getSize().x;
-	float yFloat = (float)ySize / window.getSize().y;
-
-	homeView.reset(sf::FloatRect(0.f, 0.f, xSize, ySize));
-	homeView.setViewport(sf::FloatRect(0.f, 0.f, xFloat, yFloat));
-}
 
 vector<Sprite> HomeScreen::drawCards(RenderWindow& window, Event &event, int viewOption) {
 

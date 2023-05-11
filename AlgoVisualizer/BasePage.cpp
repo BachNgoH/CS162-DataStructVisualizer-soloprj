@@ -526,34 +526,57 @@ void BasePage::drawInitialize(int &option) {
 }
 
 void BasePage::drawDelete(int& option) {
-	RenderWindow deleteWindow(VideoMode(600, 400), "Delete", Style::Titlebar | Style::Close);
-	Texture bgTexture;
-	bgTexture.loadFromFile("resources/backgrounds/Delete-bg.png");
-	Sprite deleteBg;
-	deleteBg.setTexture(bgTexture);
+	string windowTitle = "Delete At Index";
 
-	// Done button
+	RenderWindow deleteWindow(VideoMode(600, 400), windowTitle, Style::Close | Style::Titlebar);
+	vector<string> text = { "Head", "Tail", "Index:"};
+	vector<Vector2f> positions = { {171,60}, {171,125}, {171,196} };
+	vector<Vector2f> textPositions = { {276,74}, {273,136}, {195,207}};
+	vector<RectangleShape> boxes;
+	vector<Text> allText;
+	boxes.resize(text.size());
+	allText.resize(text.size());
+
+	for (size_t i = 0; i < text.size(); i++)
+	{
+		boxes[i].setSize(Vector2f(257, 52));
+		boxes[i].setFillColor(Color(217, 217, 217));
+		boxes[i].setPosition(positions[i]);
+
+		allText[i].setString(text[i]);
+		allText[i].setFont(font);
+		allText[i].setCharacterSize(20);
+		allText[i].setPosition(textPositions[i]);
+		allText[i].setFillColor(Color::Black);
+	}
+
+	// Index Box
+	TextBox indexTextBox(18, Color::Black, false);
+	indexTextBox.setFont(font);
+	indexTextBox.setPosition(Vector2f(376, 210));
+	indexTextBox.setLimit(true, 1);
+
+	RectangleShape indexRect;
+	indexRect.setSize(Vector2f(45, 27));
+	indexRect.setFillColor(Color(217, 217, 217));
+	indexRect.setPosition(365, 209);
+
+	// Done Button
 	Texture doneTexture;
 	doneTexture.loadFromFile("resources/buttons/DoneButton.png");
-
 	Sprite doneButton;
 	doneButton.setTexture(doneTexture);
 	doneButton.setPosition(Vector2f(503, 346));
 
 	// Error Message
-	Font font;
-	font.loadFromFile("resources/fonts/SourceCodePro-Regular.ttf");
 	Text errorMessage;
 	errorMessage.setFont(font);
 	errorMessage.setFillColor(Color::Red);
 	errorMessage.setCharacterSize(15);
-	errorMessage.setPosition(Vector2f(171, 276));
+	errorMessage.setPosition(Vector2f(171, 334));
 
-	// Search Value Textbox
-	TextBox indexTextbox(18, Color::White, false);
-	indexTextbox.setPosition(Vector2f(375, 188));
-	indexTextbox.setFont(font);
-	indexTextbox.setLimit(true, 1);
+
+	int deleteOption = InsertOption::HEAD;
 
 	while (deleteWindow.isOpen()) {
 		Event aevent;
@@ -561,45 +584,82 @@ void BasePage::drawDelete(int& option) {
 
 		while (deleteWindow.pollEvent(aevent)) {
 			switch (aevent.type) {
-			case (Event::Closed):
+			case Event::Closed:
 				deleteWindow.close();
 				option = 0;
 				break;
-			case (Event::MouseButtonPressed):
-				cout << mousePos.x << ", " << mousePos.y << endl;
-				if (mousePos.x > 171 && mousePos.x < 171 + 257 && mousePos.y > 174 && mousePos.y < 174 + 52) {
-					indexTextbox.setSelected(true);
+			case Event::TextEntered:
+				indexTextBox.typedOn(aevent);
+				break;
+			case Event::MouseButtonPressed:
+				if (utils::isHover(boxes[2], mousePos)) {
+					indexTextBox.setSelected(true);
 				}
 				else {
-					indexTextbox.setSelected(false);
+					indexTextBox.setSelected(false);
 				}
+
 				if (utils::isHover(doneButton, mousePos)) {
-
-					if (!indexTextbox.isEmpty()) {
-						int index = stoi(indexTextbox.getText());
-						if (index >= arrSize) {
-							errorMessage.setString("Invalid Index");
-						}
-						else {
-							deleteWindow.close();
-							option = 0;
-
-							// Start Delete
-							startDeleting(index);
-							clock.restart();
-							stopSearching();
-							deleteWindow.close();
-						}
+					if (arrSize >= maxArrSize) {
+						errorMessage.setString("The Max Array Size is " + to_string(maxArrSize));
 					}
 					else {
-						errorMessage.setString("Index is Required!");
+						int index;
+						if (!indexTextBox.isEmpty() && deleteOption == InsertOption::INDEX)
+							index = stoi(indexTextBox.getText());
+						else if (deleteOption == InsertOption::HEAD)
+							index = 0;
+						else if (deleteOption == InsertOption::TAIL)
+							index = arr.size() - 1;
+
+						if (index >= arrSize || index < 0) {
+							//cout << errorMessage.getString().toAnsiString() << endl;
+							errorMessage.setString("Invalid index");
+						}
+						else {
+							startDeleting(index);
+
+							clock.restart();
+
+							stopSearching();
+
+							deleteWindow.close();
+							option = 0;
+							isPaused = false;
+						}
 					}
 				}
-			case (Event::TextEntered):
-				indexTextbox.typedOn(aevent);
+				break;
+			default:
+				break;
+			}
+		}
+
+		deleteWindow.clear(Color(232, 232, 232));
+
+		for (int i = 0; i < text.size(); i++) {
+
+			if (utils::isHover(boxes[i], mousePos)) {
+				boxes[i].setFillColor(Color::Black);
+				allText[i].setFillColor(Color::White);
+			}
+			else {
+				boxes[i].setFillColor(Color(217, 217, 217));
+				allText[i].setFillColor(Color::Black);
 			}
 
+			if (aevent.type == Event::MouseButtonPressed) {
+				if (utils::isHover(boxes[i], mousePos))
+					deleteOption = i;
+			}
+
+			if (deleteOption == i)
+				boxes[i].setFillColor(pallete[1]);
+
+			deleteWindow.draw(boxes[i]);
+			deleteWindow.draw(allText[i]);
 		}
+
 		if (utils::isHover(doneButton, mousePos)) {
 			doneTexture.loadFromFile("resources/buttons/DoneButton_selected.png");
 			doneButton.setTexture(doneTexture);
@@ -609,11 +669,11 @@ void BasePage::drawDelete(int& option) {
 			doneButton.setTexture(doneTexture);
 		}
 
-		deleteWindow.clear();
-		deleteWindow.draw(deleteBg);
 		deleteWindow.draw(doneButton);
+		deleteWindow.draw(indexRect); 
+		indexTextBox.drawTo(deleteWindow);
 		deleteWindow.draw(errorMessage);
-		indexTextbox.drawTo(deleteWindow);
+
 		deleteWindow.display();
 	}
 }
